@@ -6,9 +6,8 @@ Whether you're just starting your Web3 journey or building production-ready dApp
 
 ---
 
-## 🚀 What is Ethers.js?
 
-[Ethers.js](https://docs.ethers.io/) is a complete Ethereum wallet implementation and utilities library in JavaScript (and TypeScript). It allows developers to:
+> 🚀 **View the Full Guide Here:** [https://tinyurl.com/etherbyarnav](https://tinyurl.com/etherbyarnav)
 
 - Connect to Ethereum nodes
 - Interact with smart contracts
