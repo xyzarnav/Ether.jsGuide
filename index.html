@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Ether.js Guide: Beginner to Advanced</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f8f9fa; /* Lighter background */
+            color: #343a40; /* Darker text */
+            line-height: 1.7;
+        }
+        #sidebar {
+            width: 280px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08); /* More subtle shadow */
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 1px solid #e9ecef;
+        }
+        #sidebar h2 {
+            color: #007bff; /* Primary blue for TOC title */
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        #sidebar ul li {
+            margin-bottom: 8px;
+        }
+        #sidebar ul li a {
+            text-decoration: none;
+            color: #495057; /* Darker grey for links */
+            padding: 7px 0;
+            display: block;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            font-size: 0.95em;
+        }
+        #sidebar ul li a:hover {
+            color: #0056b3; /* Darker blue on hover */
+            background-color: #e9f0f7; /* Light highlight on hover */
+            border-radius: 3px;
+            padding-left: 5px;
+        }
+        #sidebar ul ul {
+            padding-left: 20px;
+            border-left: 2px solid #ced4da; /* Lighter grey for sub-item border */
+            margin-top: 5px;
+        }
+        #sidebar ul ul li a {
+            font-size: 0.85em;
+            color: #6c757d; /* Lighter grey for sub-links */
+        }
+        #sidebar ul ul li a:hover {
+            color: #343a40; /* Darker on hover */
+        }
+        #content {
+            flex-grow: 1;
+            padding: 30px 50px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        #content section {
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #e0e0e0; /* Dashed separator */
+        }
+        #content section:last-child {
+            border-bottom: none;
+        }
+        #content h1 {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        #content h2 {
+            color: #343a40;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #007bff;
+            padding-left: 10px;
+        }
+        #content h3 {
+            color: #495057;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        #content h4 {
+            color: #6c757d;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        #content p {
+            margin-bottom: 15px;
+        }
+        #content ul, #content ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        #content li {
+            margin-bottom: 8px;
+        }
+        pre {
+            background-color: #282c34; /* Darker background for code blocks */
+            border-left: 5px solid #61dafb; /* Accent color for code */
+            padding: 20px;
+            overflow-x: auto;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        code {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            color: #e06c75; /* Reddish for inline code */
+            background-color: #e9ecef; /* Light grey for inline code background */
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        pre code {
+            color: #abb2bf; /* Light grey for block code */
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            line-height: 1.4;
+            display: block; /* Ensures code takes full width of pre */
+        }
+        /* Custom Text Styles */
+        .highlight-blue { color: #007bff; font-weight: bold; }
+        .highlight-green { color: #28a745; font-weight: bold; }
+        .highlight-purple { color: #6f42c1; font-weight: bold; }
+        .italic { font-style: italic; }
+        .bold { font-weight: bold; }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            #sidebar {
+                width: 250px;
+            }
+            #content {
+                padding: 25px 30px;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                border-bottom: 1px solid #e9ecef;
+                border-right: none;
+            }
+            #sidebar h2 {
+                text-align: center;
+            }
+            #sidebar ul {
+                padding: 10px 20px;
+            }
+            #sidebar ul li a {
+                padding: 8px 10px;
+            }
+            #content {
+                padding: 20px;
+                margin-top: 0;
+                margin-bottom: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            #content h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+            #content h2 {
+                font-size: 1.5em;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#introduction-setup">Introduction & Setup</a>
+                <ul>
+                    <li><a href="#what-is-etherjs">What is Ether.js?</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#basic-import">Basic Import</a></li>
+                </ul>
+            </li>
+            <li><a href="#core-concepts">Core Concepts</a>
+                <ul>
+                    <li><a href="#key-components-overview">Key Components Overview</a></li>
+                    <li><a href="#bignumber-handling">BigNumber Handling</a></li>
+                </ul>
+            </li>
+            <li><a href="#providers">Providers</a>
+                <ul>
+                    <li><a href="#what-are-providers">What are Providers?</a></li>
+                    <li><a href="#types-of-providers">Types of Providers</a></li>
+                    <li><a href="#provider-methods">Provider Methods</a></li>
+                </ul>
+            </li>
+            <li><a href="#wallets-signers">Wallets & Signers</a>
+                <ul>
+                    <li><a href="#what-are-wallets-and-signers">What are Wallets and Signers?</a></li>
+                    <li><a href="#creating-wallets">Creating Wallets</a></li>
+                    <li><a href="#connecting-wallet-to-provider">Connecting Wallet to Provider</a></li>
+                    <li><a href="#wallet-operations">Wallet Operations</a></li>
+                </ul>
+            </li>
+            <li><a href="#contracts">Contracts</a>
+                <ul>
+                    <li><a href="#contract-basics">Contract Basics</a></li>
+                    <li><a href="#creating-contract-instance">Creating Contract Instance</a></li>
+                    <li><a href="#contract-interaction">Contract Interaction</a></li>
+                </ul>
+            </li>
+            <li><a href="#transactions">Transactions</a>
+                <ul>
+                    <li><a href="#transaction-structure">Transaction Structure</a></li>
+                    <li><a href="#sending-transactions">Sending Transactions</a></li>
+                    <li><a href="#transaction-receipts">Transaction Receipts</a></li>
+                    <li><a href="#gas-optimization-tx">Gas Optimization (EIP-1559)</a></li>
+                </ul>
+            </li>
+            <li><a href="#events-logs">Events & Logs</a>
+                <ul>
+                    <li><a href="#listening-to-events">Listening to Events</a></li>
+                    <li><a href="#querying-past-events">Querying Past Events</a></li>
+                    <li><a href="#event-filtering">Event Filtering</a></li>
+                    <li><a href="#parsing-events">Parsing Events</a></li>
+                </ul>
+            </li>
+            <li><a href="#utilities">Utilities</a>
+                <ul>
+                    <li><a href="#common-utility-functions">Common Utility Functions</a></li>
+                    <li><a href="#working-with-abis">Working with ABIs</a></li>
+                </ul>
+            </li>
+            <li><a href="#advanced-topics">Advanced Topics</a>
+                <ul>
+                    <li><a href="#contract-factories">Contract Factories</a></li>
+                    <li><a href="#multicall-pattern">Multicall Pattern</a></li>
+                    <li><a href="#proxy-patterns">Proxy Patterns</a></li>
+                    <li><a href="#flash-loans-integration">Flash Loans Integration</a></li>
+                </ul>
+            </li>
+            <li><a href="#best-practices">Best Practices</a>
+                <ul>
+                    <li><a href="#security-best-practices">Security Best Practices</a></li>
+                    <li><a href="#gas-optimization">Gas Optimization Strategies</a></li>
+                    <li><a href="#code-organization">Code Organization</a></li>
+                </ul>
+            </li>
+            <li><a href="#real-world-examples">Real-World Examples</a>
+                <ul>
+                    <li><a href="#dex-trading-bot">1. DEX Trading Bot</a></li>
+                    <li><a href="#nft-marketplace">2. NFT Marketplace</a></li>
+                    <li><a href="#yield-farming-monitor">3. Yield Farming Monitor</a></li>
+                    <li><a href="#multi-signature-wallet">4. Multi-Signature Wallet</a></li>
+                </ul>
+            </li>
+            <li><a href="#common-patterns-snippets">Common Patterns & Snippets</a>
+                <ul>
+                    <li><a href="#connection-management">Connection Management</a></li>
+                    <li><a href="#event-monitoring">Event Monitoring</a></li>
+                    <li><a href="#transaction-queue">Transaction Queue</a></li>
+                </ul>
+            </li>
+            <li><a href="#testing-with-etherjs">Testing with Ether.js</a>
+                <ul>
+                    <li><a href="#unit-testing-example">Unit Testing Example</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div id="content">
+        <h1>Complete Ether.js Guide: Beginner to Advanced</h1>
+        <p>Welcome to this <span class="highlight-blue">comprehensive guide</span> on Ether.js, the powerful and versatile library for interacting with the Ethereum blockchain. Whether you're a beginner or an experienced developer, this resource aims to provide a clear path from <span class="italic">basic setup</span> to <span class="bold">advanced patterns</span>.</p>
+        <p>Each section is packed with <span class="highlight-green">practical examples</span> and best practices to help you build robust and secure decentralized applications (dApps). Remember to <span class="bold">always test your code thoroughly</span> and follow security guidelines, especially when dealing with real funds.</p>
+
+        <section id="introduction-setup">
+            <h2>Introduction & Setup</h2>
+            <h3 id="what-is-etherjs">What is Ether.js?</h3>
+            <p>Ether.js is a <span class="highlight-blue">complete and compact library</span> for interacting with the Ethereum blockchain and its ecosystem. It provides an intuitive API to perform common tasks such as sending transactions, interacting with smart contracts, and reading blockchain data. It's designed to be:</p>
+            <ul>
+                <li><strong>Modular:</strong> Use only what you need, reducing bundle size.</li>
+                <li><strong>Secure:</strong> Built with security best practices in mind, minimizing common vulnerabilities.</li>
+                <li><strong>TypeScript-first:</strong> Offers full TypeScript support, enhancing code quality and developer experience.</li>
+                <li><strong>Well-documented:</strong> Features comprehensive documentation, making it easy to learn and use.</li>
+            </ul>
+            <p class="italic">The library aims for simplicity and efficiency, making it a popular choice for Ethereum development.</p>
+
+            <h3 id="installation">Installation</h3>
+            <p>To begin using Ether.js, you need to install it in your project. You can use either npm or yarn:</p>
+            <h4>NPM</h4>
+            <pre><code>npm install ethers</code></pre>
+            <p>For a <span class="highlight-green">specific, recommended version</span> to ensure stability and avoid breaking changes:</p>
+            <pre><code>npm install ethers@^6.7.0</code></pre>
+            <h4>Yarn</h4>
+            <pre><code>yarn add ethers</code></pre>
+
+            <h3 id="basic-import">Basic Import</h3>
+            <p>Once installed, you can import Ether.js into your JavaScript or TypeScript files:</p>
+            <h4>ES6 Modules (Modern JavaScript)</h4>
+            <pre><code>import { ethers } from 'ethers';</code></pre>
+            <h4>CommonJS (Node.js environments)</h4>
+            <pre><code>const { ethers } = require('ethers');</code></pre>
+            <p><span class="highlight-purple">For optimal tree-shaking and smaller bundles</span>, it's often recommended to import only the specific components you need:</p>
+            <pre><code>import { JsonRpcProvider, Wallet, Contract } from 'ethers';</code></pre>
+        </section>
+
+        <section id="core-concepts">
+            <h2>Core Concepts</h2>
+            <h3 id="key-components-overview">Key Components Overview</h3>
+            <p>Ether.js is built around four fundamental components that facilitate various interactions with the Ethereum blockchain:</p>
+            <pre><code>// The four main components of ethers.js
+const { 
+  providers,  // &lt;span class="highlight-blue"&gt;Connect to blockchain&lt;/span&gt; (read-only operations)
+  Wallet,     // &lt;span class="highlight-green"&gt;Manage private keys&lt;/span&gt; and sign transactions
+  Contract,   // &lt;span class="highlight-purple"&gt;Interact with smart contracts&lt;/span&gt; (read and write)
+  utils       // &lt;span class="highlight-blue"&gt;Utility functions&lt;/span&gt; for data manipulation
+} = require('ethers');</code></pre>
+
+            <h3 id="bignumber-handling">BigNumber Handling</h3>
+            <p>Ethereum uses large integer values (like Wei for ETH amounts) that JavaScript's standard numbers cannot safely handle due to precision limits. Ether.js v6 now utilizes <span class="bold">native JavaScript <code>BigInt</code></span> for these operations, providing robust and accurate handling of large numbers.</p>
+            <pre><code>// Ethers v6 uses native BigInt for large numbers
+const amount = ethers.parseEther("1.5"); // Converts "1.5" ETH to its equivalent in Wei (as BigInt)
+console.log(amount); // Example output: 1500000000000000000n (a BigInt)
+
+const readable = ethers.formatEther(amount); // Converts Wei (BigInt) back to a readable ETH string
+console.log(readable); // Output: "1.5"
+
+// Working directly with BigInt
+const gasPrice = BigInt("20000000000"); // 20 Gwei (as BigInt)
+const gasLimit = BigInt("21000");
+const cost = gasPrice * gasLimit; // BigInt multiplication
+console.log(cost); // Example output: 420000000000000n</code></pre>
+            <p class="italic">This shift to native `BigInt` simplifies number handling compared to previous versions that used a custom `BigNumber` class.</p>
+        </section>
+
+        <section id="providers">
+            <h2>Providers</h2>
+            <h3 id="what-are-providers">What are Providers?</h3>
+            <p><span class="bold">Providers are essential read-only connections to the Ethereum network.</span> They act as the bridge between your application and the blockchain, allowing you to <span class="highlight-blue">query blockchain data</span> such as account balances, transaction details, block information, and contract state, all without needing a wallet or private key.</p>
+
+            <h3 id="types-of-providers">Types of Providers</h3>
+            <p>Ether.js offers various types of providers to connect to different Ethereum network endpoints:</p>
+            <h4>1. JSON-RPC Provider</h4>
+            <p>This is the most common type, connecting to a standard JSON-RPC endpoint. You can connect to a local development node (like Hardhat or Ganache) or a public/private RPC service.</p>
+            <pre><code>// Connect to a local Ethereum node (e.g., Hardhat, Ganache)
+const provider = new ethers.JsonRpcProvider("http://localhost:8545");
+console.log("Connected to local RPC provider.");
+
+// Connect to Infura (mainnet example, replace YOUR_PROJECT_ID)
+const infuraProvider = new ethers.JsonRpcProvider(
+  "https://mainnet.infura.io/v3/YOUR_PROJECT_ID"
+);
+console.log("Connected to Infura mainnet.");
+
+// Connect to Alchemy (mainnet example, replace YOUR_API_KEY)
+const alchemyProvider = new ethers.JsonRpcProvider(
+  "https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY"
+);
+console.log("Connected to Alchemy mainnet.");</code></pre>
+            <p class="italic">Always keep your API keys secure and avoid exposing them in client-side code.</p>
+
+            <h4>2. WebSocket Provider</h4>
+            <p>WebSocket providers offer a persistent connection, allowing you to <span class="highlight-green">listen for real-time events</span> and updates from the blockchain, such as new blocks or specific contract events.</p>
+            <pre><code>const wsProvider = new ethers.WebSocketProvider(
+  "wss://mainnet.infura.io/ws/v3/YOUR_PROJECT_ID"
+);
+
+// Listen for new blocks in real-time
+wsProvider.on('block', (blockNumber) => {
+  console.log('🎉 New block mined:', blockNumber);
+});
+
+// Don't forget to close the connection when no longer needed
+// wsProvider.off('block');
+// wsProvider.destroy();</code></pre>
+
+            <h4>3. Browser Provider (MetaMask, WalletConnect, etc.)</h4>
+            <p>This provider type is used when interacting with a browser-based wallet like MetaMask or through WalletConnect. It connects to the <span class="bold"><code>window.ethereum</code></span> object injected by the wallet.</p>
+            <pre><code>// Check if a browser-based Ethereum provider (e.g., MetaMask) is available
+if (typeof window.ethereum !== 'undefined') {
+  console.log('MetaMask or similar wallet detected!');
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  
+  // Request account access from the user. This will open the wallet's UI.
+  // It's crucial to call this before performing any operations that require user's address or signature.
+  await provider.send("eth_requestAccounts", []);
+  console.log('Account access requested and hopefully granted.');
+} else {
+  console.warn('No Ethereum wallet detected. Please install MetaMask or similar.');
+}</code></pre>
+
+            <h3 id="provider-methods">Provider Methods</h3>
+            <p>Providers offer a rich set of methods to query various aspects of the blockchain:</p>
+            <pre><code>// Assuming 'provider' is an initialized ethers provider instance
+
+// Get network information (name, chain ID, ENS address)
+const network = await provider.getNetwork();
+console.log("Network Name:", &lt;span class="highlight-blue"&gt;network.name&lt;/span&gt;, "Chain ID:", &lt;span class="highlight-blue"&gt;network.chainId&lt;/span&gt;.toString());
+
+// Get the latest block details
+const block = await provider.getBlock('latest');
+console.log("Latest Block Number:", &lt;span class="highlight-green"&gt;block.number&lt;/span&gt;);
+console.log("Block Timestamp:", new Date(Number(block.timestamp) * 1000).toLocaleString());
+
+// Get the balance of a specific Ethereum address (in Wei, as BigInt)
+const addressToQuery = "0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D"; // Example address
+const balanceWei = await provider.getBalance(addressToQuery);
+console.log("Balance of " + addressToQuery + ":", ethers.formatEther(balanceWei), "ETH");
+
+// Get the transaction count (nonce) for an address, indicating how many transactions it has sent
+const nonce = await provider.getTransactionCount(addressToQuery);
+console.log("Transaction Count (Nonce) for " + addressToQuery + ":", nonce);
+
+// Get current fee data (gas price, maxFeePerGas, maxPriorityFeePerGas)
+const feeData = await provider.getFeeData();
+console.log("Current Gas Price:", feeData.gasPrice ? ethers.formatUnits(feeData.gasPrice, "gwei") + " Gwei" : "N/A");
+console.log("Max Fee Per Gas (EIP-1559):", feeData.maxFeePerGas ? ethers.formatUnits(feeData.maxFeePerGas, "gwei") + " Gwei" : "N/A");
+console.log("Max Priority Fee Per Gas (EIP-1559):", feeData.maxPriorityFeePerGas ? ethers.formatUnits(feeData.maxPriorityFeePerGas, "gwei") + " Gwei" : "N/A");
+
+
+// Get a transaction by its hash
+const txHash = "0x..."; // Replace with a real transaction hash
+// const tx = await provider.getTransaction(txHash);
+// if (tx) console.log("Transaction Details:", tx);
+
+// Get the receipt of a transaction by its hash (available after it's mined)
+// const receipt = await provider.getTransactionReceipt(txHash);
+// if (receipt) console.log("Transaction Receipt:", receipt);</code></pre>
+        </section>
+
+        <section id="wallets-signers">
+            <h2>Wallets & Signers</h2>
+            <h3 id="what-are-wallets-and-signers">What are Wallets and Signers?</h3>
+            <p>In Ether.js, <span class="bold">Wallets and Signers</span> are crucial for performing state-changing operations on the blockchain, such as sending Ether or interacting with smart contracts that modify their state.</p>
+            <ul>
+                <li><span class="highlight-blue"><strong>Wallet:</strong></span> A concrete implementation that <span class="italic">manages a private key</span> and can perform cryptographic signing operations. It also extends <code>Signer</code>.</li>
+                <li><span class="highlight-green"><strong>Signer:</strong></span> An <span class="italic">abstract class</span> that represents anything capable of signing messages and transactions. A <code>Wallet</code> is a type of <code>Signer</code>, but a <code>Signer</code> could also be an interface to a hardware wallet or a browser-injected wallet (like MetaMask).</li>
+            </ul>
+
+            <h3 id="creating-wallets">Creating Wallets</h3>
+            <p>You can create Ether.js Wallet instances in several ways, depending on your needs:</p>
+            <h4>1. From a Private Key</h4>
+            <p>This is common for server-side applications or scripts where you securely manage private keys.</p>
+            <pre><code>const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // &lt;span class="highlight-red"&gt;Replace with your actual private key!&lt;/span&gt; (64 hex characters, starts with 0x)
+const wallet = new ethers.Wallet(privateKey);
+console.log("Wallet Address (from private key):", &lt;span class="highlight-blue"&gt;wallet.address&lt;/span&gt;);</code></pre>
+            <p class="italic">Never hardcode private keys in production code or expose them publicly.</p>
+
+            <h4>2. From a Mnemonic Phrase (Seed Phrase)</h4>
+            <p>This method allows you to derive a wallet from a 12- or 24-word seed phrase, following BIP-39 standards.</p>
+            <pre><code>const mnemonic = "test test test test test test test test test test test test"; // &lt;span class="highlight-red"&gt;Replace with your actual mnemonic!&lt;/span&gt;
+const walletFromMnemonic = ethers.Wallet.fromPhrase(mnemonic);
+console.log("Wallet Address (from mnemonic):", &lt;span class="highlight-blue"&gt;walletFromMnemonic.address&lt;/span&gt;);
+
+// You can also derive from a specific HD (Hierarchical Deterministic) path
+const hdNode = ethers.HDNodeWallet.fromPhrase(mnemonic);
+const wallet0 = hdNode.derivePath("m/44'/60'/0'/0/0"); // Standard Ethereum derivation path for the first account
+console.log("Wallet Address (derived from path):", &lt;span class="highlight-blue"&gt;wallet0.address&lt;/span&gt;);</code></pre>
+
+            <h4>3. Generate a Random Wallet</h4>
+            <p>Useful for testing or generating new, secure wallets programmatically. <span class="highlight-green">Always store the private key and mnemonic safely!</span></p>
+            <pre><code>const randomWallet = ethers.Wallet.createRandom();
+console.log("Random Wallet Address:", &lt;span class="highlight-blue"&gt;randomWallet.address&lt;/span&gt;);
+console.log("Random Wallet Private Key:", &lt;span class="highlight-red"&gt;randomWallet.privateKey&lt;/span&gt;);
+console.log("Random Wallet Mnemonic:", &lt;span class="highlight-purple"&gt;randomWallet.mnemonic.phrase&lt;/span&gt;);</code></pre>
+
+            <h3 id="connecting-wallet-to-provider">Connecting Wallet to Provider</h3>
+            <p>A wallet instance alone cannot interact with the blockchain. It needs a <span class="bold">Provider</span> to send transactions and query data. You "connect" a wallet to a provider:</p>
+            <pre><code>const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_PROJECT_ID");
+const privateKey = "0x..."; // Your private key
+const wallet = new ethers.Wallet(privateKey, provider); // &lt;span class="highlight-green"&gt;Wallet now has a provider connection&lt;/span&gt;
+
+console.log(`Wallet ${wallet.address} connected to network ${provider.network.name}`);
+// Now this 'wallet' instance can send transactions and query blockchain data directly.</code></pre>
+
+            <h3 id="wallet-operations">Wallet Operations</h3>
+            <p>Wallets and Signers enable signing various types of data and transactions:</p>
+            <h4>Sign a Message</h4>
+            <p>Signing arbitrary messages is common for off-chain authentication or proving ownership of an address without sending a transaction.</p>
+            <pre><code>const message = "Hello, Ethereum! This is a test message.";
+const signature = await wallet.signMessage(message);
+console.log("Signed Message Signature:", signature);
+
+// &lt;span class="bold"&gt;Verify the signature:&lt;/span&gt; You can recover the original signer's address from the message and signature.
+const recoveredAddress = ethers.verifyMessage(message, signature);
+console.log("Recovered Address from Signature:", recoveredAddress);
+console.log("Original Signer Address:", wallet.address);
+console.log("Signature verification match:", recoveredAddress === wallet.address);</code></pre>
+
+            <h4>Sign and Send a Transaction</h4>
+            <p>This is how you initiate value transfers or contract calls that modify the blockchain state.</p>
+            <pre><code>const recipientAddress = "0xYourRecipientAddressHere"; // Replace with a real recipient address
+const transaction = {
+  to: recipientAddress,
+  value: ethers.parseEther("0.05"), // 0.05 ETH in Wei
+  gasLimit: 21000, // Standard gas limit for simple ETH transfers
+  gasPrice: ethers.parseUnits("20", "gwei") // 20 Gwei gas price
+  // nonce: await wallet.getNonce(), // It's good practice to manage nonce
+  // chainId: (await wallet.provider.getNetwork()).chainId // Ensure correct chainId
+};
+
+console.log("Preparing to send transaction...");
+const txResponse = await wallet.sendTransaction(transaction); // Send the transaction
+console.log("Transaction sent! Hash:", &lt;span class="highlight-blue"&gt;txResponse.hash&lt;/span&gt;);
+
+// Wait for the transaction to be mined and get the receipt
+const receipt = await txResponse.wait();
+console.log("Transaction confirmed in block:", &lt;span class="highlight-green"&gt;receipt.blockNumber&lt;/span&gt;);
+console.log("Gas Used:", &lt;span class="highlight-purple"&gt;receipt.gasUsed.toString()&lt;/span&gt;);
+console.log("Transaction Status:", receipt.status === 1 ? "Success" : "Failed");</code></pre>
+        </section>
+
+        <section id="contracts">
+            <h2>Contracts</h2>
+            <h3 id="contract-basics">Contract Basics</h3>
+            <p>The <span class="bold"><code>Contract</code> class in Ether.js</span> is your primary tool for interacting with smart contracts deployed on the Ethereum blockchain. It simplifies calling functions, reading state variables, and listening for events emitted by contracts.</p>
+            <p>To interact with a smart contract, you primarily need two pieces of information:</p>
+            <ol>
+                <li><span class="highlight-blue"><strong>Contract Address:</strong></span> The unique address where the contract is deployed on the network (e.g., <code>0x...</code>).</li>
+                <li><span class="highlight-green"><strong>ABI (Application Binary Interface):</strong></span> A JSON array that describes the contract's public functions, events, and state variables, allowing Ether.js to correctly encode and decode data for interaction.</li>
+            </ol>
+
+            <h3 id="creating-contract-instance">Creating Contract Instance</h3>
+            <p>You create an instance of a <code>Contract</code> by providing its address, ABI, and a <span class="italic">Provider</span> (for read-only operations) or a <span class="italic">Signer</span> (for sending transactions).</p>
+            <pre><code>const contractAddress = "0x..."; // &lt;span class="highlight-red"&gt;Replace with your contract's address&lt;/span&gt;
+// &lt;span class="bold"&gt;Example ABI for a simple ERC-20 token&lt;/span&gt;
+const abi = [
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function totalSupply() view returns (uint256)",
+  "function balanceOf(address account) view returns (uint256)",
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "event Transfer(address indexed from, address indexed to, uint256 value)"
+];
+
+// &lt;span class="highlight-blue"&gt;1. Read-only Contract Instance (with Provider):&lt;/span&gt;
+// Use this for calling 'view' or 'pure' functions that don't modify blockchain state.
+const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_PROJECT_ID");
+const contract = new ethers.Contract(contractAddress, abi, provider);
+console.log("Read-only contract instance created.");
+
+// &lt;span class="highlight-green"&gt;2. Read-write Contract Instance (with Signer):&lt;/span&gt;
+// Use this for sending transactions to 'nonpayable' or 'payable' functions that modify blockchain state.
+const privateKey = "0x..."; // Your private key
+const wallet = new ethers.Wallet(privateKey, provider);
+const contractWithSigner = new ethers.Contract(contractAddress, abi, wallet);
+console.log("Read-write contract instance created with signer.");</code></pre>
+
+            <h3 id="contract-interaction">Contract Interaction</h3>
+            <h4>Reading from Contract (View/Pure Functions)</h4>
+            <p>Calling <code>view</code> or <code>pure</code> functions on a contract does not cost gas and can be done directly with a Provider-connected contract instance.</p>
+            <pre><code>// Assuming 'contract' is the read-only instance from above
+try {
+  const name = await contract.name();
+  const symbol = await contract.symbol();
+  const totalSupply = await contract.totalSupply();
+  const myAddress = "0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D"; // Replace with an address to query
+  const balance = await contract.balanceOf(myAddress);
+
+  console.log(`Token Name: &lt;span class="highlight-blue"&gt;${name}&lt;/span&gt; (${symbol})`);
+  console.log(`Total Supply: &lt;span class="highlight-green"&gt;${ethers.formatEther(totalSupply)}&lt;/span&gt; tokens`);
+  console.log(`Balance of ${myAddress}: &lt;span class="highlight-purple"&gt;${ethers.formatEther(balance)}&lt;/span&gt; tokens`);
+} catch (error) {
+  console.error("Error reading from contract:", error.message);
+}</code></pre>
+
+            <h4>Writing to Contract (State-Changing Functions)</h4>
+            <p>To execute functions that modify the blockchain state (e.g., `transfer`, `mint`), you need a <span class="bold">Signer-connected contract instance</span>, and these operations will incur gas costs.</p>
+            <pre><code>// Assuming 'contractWithSigner' is the read-write instance
+const recipientAddress = "0xYourRecipientAddressHere"; // &lt;span class="highlight-red"&gt;Recipient for token transfer&lt;/span&gt;
+const amountToTransfer = ethers.parseEther("10"); // 10 tokens
+
+try {
+  console.log(`Attempting to transfer ${ethers.formatEther(amountToTransfer)} tokens to ${recipientAddress}...`);
+  const txResponse = await contractWithSigner.transfer(recipientAddress, amountToTransfer);
+  console.log("Transfer transaction hash:", &lt;span class="highlight-blue"&gt;txResponse.hash&lt;/span&gt;);
+
+  // Wait for the transaction to be mined
+  const receipt = await txResponse.wait();
+  console.log("Transfer successful! Block Number:", &lt;span class="highlight-green"&gt;receipt.blockNumber&lt;/span&gt;);
+  console.log("Gas Used:", &lt;span class="highlight-purple"&gt;receipt.gasUsed.toString()&lt;/span&gt;);
+  console.log("Transaction Status:", receipt.status === 1 ? "Success" : "Failed");
+} catch (error) {
+  console.error("Error transferring tokens:", error.message);
+  // Detailed error handling for contract calls
+  if (error.code === 'CALL_EXCEPTION') {
+    console.error("Reason:", error.reason);
+  }
+}</code></pre>
+
+            <h4>Estimating Gas for Contract Calls</h4>
+            <p>Before sending a transaction, you can estimate the gas it will consume. This helps in setting appropriate <span class="italic">gas limits</span> and prevents transactions from running out of gas.</p>
+            <pre><code>try {
+  const recipientAddress = "0xYourRecipientAddressHere";
+  const amountToTransfer = ethers.parseEther("10");
+
+  const gasEstimate = await contractWithSigner.transfer.estimateGas(
+    recipientAddress,
+    amountToTransfer
+  );
+  console.log("Estimated Gas for transfer:", &lt;span class="highlight-blue"&gt;gasEstimate.toString()&lt;/span&gt;);
+
+  // It's often recommended to add a small buffer to the estimated gas limit
+  const bufferedGasLimit = gasEstimate * BigInt(120) / BigInt(100); // Add 20% buffer
+  console.log("Buffered Gas Limit:", bufferedGasLimit.toString());
+
+} catch (error) {
+  console.error("Error estimating gas:", error.message);
+}</code></pre>
+
+            <h4>Contract Calls with Custom Gas Settings</h4>
+            <p>You can override the default gas settings for a transaction by passing an options object to the contract function call. This is crucial for controlling costs or ensuring transactions are prioritized.</p>
+            <pre><code>const tx = await contractWithSigner.transfer(
+  "0xYourRecipientAddressHere",
+  ethers.parseEther("10"),
+  {
+    gasLimit: 50000, // &lt;span class="highlight-blue"&gt;Manually set gas limit&lt;/span&gt; (be careful not to set too low)
+    gasPrice: ethers.parseUnits("25", "gwei") // &lt;span class="highlight-green"&gt;Set a specific gas price&lt;/span&gt;
+    // For EIP-1559, you'd use:
+    // maxFeePerGas: ethers.parseUnits("30", "gwei"),
+    // maxPriorityFeePerGas: ethers.parseUnits("2", "gwei")
+  }
+);
+console.log("Transaction with custom gas settings sent. Hash:", tx.hash);
+await tx.wait();
+console.log("Transaction with custom gas settings confirmed.");</code></pre>
+        </section>
+
+        <section id="transactions">
+            <h2>Transactions</h2>
+            <p>Transactions are the fundamental units of state change on the Ethereum blockchain. They represent a signed message that is broadcast to the network and, once processed, results in a state update.</p>
+
+            <h3 id="transaction-structure">Transaction Structure</h3>
+            <p>An Ethereum transaction object contains several key fields:</p>
+            <pre><code>const transaction = {
+  to: "0xYourRecipientAddress",          // &lt;span class="highlight-blue"&gt;Recipient address:&lt;/span&gt; The address to which the transaction is sent. For contract calls, this is the contract's address.
+  value: ethers.parseEther("1.0"),      // &lt;span class="highlight-green"&gt;Amount in Wei:&lt;/span&gt; The amount of Ether (in Wei) to send with the transaction. Optional for contract calls without Ether.
+  gasLimit: 21000,                      // &lt;span class="highlight-purple"&gt;Gas limit:&lt;/span&gt; The maximum amount of gas the sender is willing to pay for the transaction's execution.
+  gasPrice: ethers.parseUnits("20", "gwei"), // &lt;span class="highlight-blue"&gt;Gas price (legacy):&lt;/span&gt; The price (in Wei per gas unit) the sender is willing to pay. For EIP-1559, this is replaced by maxFeePerGas and maxPriorityFeePerGas.
+  nonce: 42,                            // &lt;span class="highlight-green"&gt;Transaction number (nonce):&lt;/span&gt; A sequential count of transactions sent by an address, preventing replay attacks.
+  data: "0x",                           // &lt;span class="highlight-purple"&gt;Transaction data (calldata):&lt;/span&gt; For contract interactions, this field contains the encoded function call and its arguments.
+  chainId: 1                            // &lt;span class="highlight-blue"&gt;Network chain ID:&lt;/span&gt; Specifies the network the transaction is intended for (e.g., 1 for Ethereum Mainnet, 11155111 for Sepolia).
+};</code></pre>
+
+            <h3 id="sending-transactions">Sending Transactions</h3>
+            <h4>Basic ETH Transfer</h4>
+            <p>The simplest form of a transaction is sending Ether from one address to another.</p>
+            <pre><code>const recipient = "0xYourRecipientAddressHere";
+const amount = ethers.parseEther("0.1"); // Send 0.1 ETH
+
+try {
+  console.log(`Sending ${ethers.formatEther(amount)} ETH to ${recipient}...`);
+  const txResponse = await wallet.sendTransaction({
+    to: recipient,
+    value: amount
+  });
+  console.log("Transaction hash:", &lt;span class="highlight-blue"&gt;txResponse.hash&lt;/span&gt;);
+
+  // Wait for the transaction to be mined and get the receipt
+  const receipt = await txResponse.wait();
+  console.log("Transaction successful in block:", &lt;span class="highlight-green"&gt;receipt.blockNumber&lt;/span&gt;);
+  console.log("Gas used for transfer:", &lt;span class="highlight-purple"&gt;receipt.gasUsed.toString()&lt;/span&gt;);
+} catch (error) {
+  console.error("Failed to send ETH:", error.message);
+  if (error.code === 'INSUFFICIENT_FUNDS') {
+    console.error("Error: Insufficient funds in wallet to cover transaction + gas.");
+  }
+}</code></pre>
+
+            <h4>Transaction with Data (Contract Interaction)</h4>
+            <p>When interacting with smart contracts, the `data` field of the transaction becomes critical, carrying the encoded function call. This is typically handled automatically when you use a `Contract` instance to call a function.</p>
+            <pre><code>const contractAddress = "0xYourTokenContractAddress"; // Example token contract
+const iface = new ethers.Interface([
+    "function transfer(address to, uint256 amount) returns (bool)"
+]);
+const encodedData = iface.encodeFunctionData("transfer", [
+    "0xAnotherRecipientAddress",
+    ethers.parseEther("5") // Transfer 5 tokens
+]);
+
+console.log("Encoded contract call data:", &lt;span class="highlight-blue"&gt;encodedData&lt;/span&gt;);
+
+try {
+  const txResponse = await wallet.sendTransaction({
+    to: contractAddress,
+    data: encodedData, // The encoded function call
+    gasLimit: 100000 // A reasonable gas limit for a simple token transfer
+  });
+  console.log("Contract interaction transaction hash:", &lt;span class="highlight-green"&gt;txResponse.hash&lt;/span&gt;);
+  await txResponse.wait();
+  console.log("Contract interaction confirmed.");
+} catch (error) {
+  console.error("Failed to interact with contract:", error.message);
+}</code></pre>
+
+            <h3 id="transaction-receipts">Transaction Receipts</h3>
+            <p>After a transaction is sent and mined, you receive a <span class="bold">Transaction Receipt</span>, which contains detailed information about its execution, including its success status, gas consumption, and emitted events (logs).</p>
+            <pre><code>const receipt = await txResponse.wait(); // This assumes 'txResponse' is from a previous 'sendTransaction' call
+
+console.log("Transaction Receipt Details:");
+console.log("  Block Number:", &lt;span class="highlight-blue"&gt;receipt.blockNumber&lt;/span&gt;);
+console.log("  Gas Used:", &lt;span class="highlight-green"&gt;receipt.gasUsed.toString()&lt;/span&gt;);
+console.log("  Cumulative Gas Used (in block):", &lt;span class="highlight-purple"&gt;receipt.cumulativeGasUsed.toString()&lt;/span&gt;);
+console.log("  Status:", receipt.status === 1 ? "Success (1)" : "Failed (0)");
+console.log("  Transaction Hash:", &lt;span class="highlight-blue"&gt;receipt.hash&lt;/span&gt;);
+console.log("  Logs (Events):", &lt;span class="highlight-green"&gt;receipt.logs.length&lt;/span&gt; + " events emitted");
+// You can iterate through receipt.logs to parse individual events.</code></pre>
+
+            <h3 id="gas-optimization-tx">Gas Optimization (EIP-1559 Transactions)</h3>
+            <p>EIP-1559 introduced a new transaction type (Type 2) that aims to improve Ethereum's fee market. Instead of a single `gasPrice`, transactions specify a `maxFeePerGas` and `maxPriorityFeePerGas`.</p>
+            <ul>
+                <li><span class="bold"><code>maxFeePerGas:</code></span> The maximum total price the sender is willing to pay per unit of gas. This covers both the base fee and the priority fee.</li>
+                <li><span class="bold"><code>maxPriorityFeePerGas:</code></span> The portion of the fee that goes directly to the miner as a tip, incentivizing them to include your transaction.</li>
+            </ul>
+            <p class="italic">The actual gas paid will be <code>(baseFeePerGas + maxPriorityFeePerGas) * gasUsed</code>, capped by `maxFeePerGas`.</p>
+            <pre><code>// Get current fee data from the provider (includes baseFeePerGas)
+const feeData = await provider.getFeeData();
+console.log("Current Base Fee Per Gas:", feeData.gasPrice ? ethers.formatUnits(feeData.gasPrice, "gwei") + " Gwei" : "N/A"); // gasPrice corresponds to baseFeePerGas for EIP-1559
+
+// &lt;span class="highlight-blue"&gt;Example EIP-1559 Transaction (Type 2):&lt;/span&gt;
+const tx = await wallet.sendTransaction({
+  to: "0xYourRecipientAddressHere",
+  value: ethers.parseEther("0.005"),
+  gasLimit: 21000,
+  maxFeePerGas: ethers.parseUnits("30", "gwei"), // Max total fee per gas unit
+  maxPriorityFeePerGas: ethers.parseUnits("2", "gwei") // Tip for the miner
+});
+
+console.log("EIP-1559 Transaction Hash:", &lt;span class="highlight-green"&gt;tx.hash&lt;/span&gt;);
+await tx.wait();
+console.log("EIP-1559 Transaction confirmed.");</code></pre>
+            <p>For optimal gas usage, it's recommended to dynamically fetch and set `maxFeePerGas` and `maxPriorityFeePerGas` based on current network conditions.</p>
+        </section>
+
+        <section id="events-logs">
+            <h2>Events & Logs</h2>
+            <p>Ethereum smart contracts can emit <span class="bold">Events</span> (also known as logs) to provide an efficient and cost-effective way to store data on the blockchain that can be easily queried off-chain. Events are crucial for building user interfaces, analytics tools, and monitoring systems.</p>
+
+            <h3 id="listening-to-events">Listening to Events (Real-time)</h3>
+            <p>You can listen for new events in real-time using a WebSocket Provider or by connecting to a JSON-RPC Provider that supports subscriptions.</p>
+            <pre><code>// Assuming 'contract' is a contract instance connected to a Provider (preferably WebSocket for real-time)
+
+// &lt;span class="highlight-blue"&gt;Listen to specific 'Transfer' events&lt;/span&gt; (e.g., for an ERC-20 token)
+contract.on("Transfer", (from, to, amount, event) => {
+  console.log(`&lt;span class="highlight-blue"&gt;Live Transfer Detected!&lt;/span&gt;`);
+  console.log(`  From: ${from}`);
+  console.log(`  To: ${to}`);
+  console.log(`  Amount: ${ethers.formatEther(amount)} tokens`);
+  console.log(`  Transaction Hash: ${event.log.transactionHash}`);
+});
+console.log("Listening for 'Transfer' events...");
+
+// &lt;span class="highlight-green"&gt;Listen to all events&lt;/span&gt; emitted by this contract
+contract.on("*", (event) => {
+  console.log("&lt;span class="highlight-green"&gt;Any Contract Event Detected:&lt;/span&gt;");
+  console.log("  Event Name:", event.log.fragment.name);
+  console.log("  Event Args:", event.log.args);
+  console.log("--------------------");
+});
+console.log("Listening for all events...");
+
+// &lt;span class="italic"&gt;Remember to unregister listeners to prevent memory leaks in long-running applications:&lt;/span&gt;
+// contract.off("Transfer");
+// contract.off("*");</code></pre>
+
+            <h3 id="querying-past-events">Querying Past Events</h3>
+            <p>You can retrieve historical events emitted by a contract within a specific block range using <code>queryFilter()</code>.</p>
+            <pre><code>// Assuming 'contract' is a contract instance connected to a Provider
+
+// &lt;span class="highlight-blue"&gt;1. Get all 'Transfer' events from block 15,000,000 to the latest&lt;/span&gt;
+const transferFilter = contract.filters.Transfer(); // Creates an event filter for the 'Transfer' event
+const pastTransfers = await contract.queryFilter(transferFilter, 15000000, "latest");
+
+console.log(`&lt;span class="bold"&gt;Found ${pastTransfers.length} past Transfer events:&lt;/span&gt;`);
+pastTransfers.forEach((event) => {
+  console.log(`  Block: ${event.blockNumber}, Tx Hash: ${event.transactionHash.substring(0, 10)}...`);
+  console.log(`  From: ${event.args.from} → To: ${event.args.to}, Amount: ${ethers.formatEther(event.args.value)}`);
+  console.log('---');
+});
+
+// &lt;span class="highlight-green"&gt;2. Filter events by a specific address&lt;/span&gt; (e.g., all transfers *from* a certain address)
+const myAddress = "0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D";
+const filterFromMyAddress = contract.filters.Transfer(myAddress, null); // 'from' is myAddress, 'to' is any (null)
+const mySentTransfers = await contract.queryFilter(filterFromMyAddress, -50000); // Query last 50,000 blocks
+
+console.log(`&lt;span class="bold"&gt;Found ${mySentTransfers.length} transfers sent from ${myAddress}:&lt;/span&gt;`);
+mySentTransfers.forEach((event) => {
+  console.log(`  Block: ${event.blockNumber}, To: ${event.args.to}, Amount: ${ethers.formatEther(event.args.value)}`);
+});</code></pre>
+
+            <h3 id="event-filtering">Event Filtering (Advanced)</h3>
+            <p>For more granular control, you can construct a filter object directly for <code>provider.getLogs()</code>. This is useful when you need to query logs that might not be directly tied to a specific contract instance in your code, or when performing complex indexed filtering.</p>
+            <p class="italic">Indexed parameters in an event (marked with <code>indexed</code> in Solidity) are hashed and stored in the log's <code>topics</code> array, allowing for efficient filtering.</p>
+            <pre><code>const contractAddress = "0xYourTokenContractAddress"; // Example token contract address
+const tokenAbi = ["event Transfer(address indexed from, address indexed to, uint256 value)"];
+const iface = new ethers.Interface(tokenAbi);
+
+const targetFromAddress = "0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D"; // Specific sender
+const targetToAddress = "0xAnotherRecipientAddress"; // Specific receiver
+
+// &lt;span class="highlight-blue"&gt;Complex event filter object&lt;/span&gt;
+const filter = {
+  address: contractAddress, // Only logs from this contract
+  topics: [
+    // &lt;span class="bold"&gt;Topic 0: Event Signature Hash&lt;/span&gt; (always the first topic for non-anonymous events)
+    // ethers.id() computes the keccak256 hash of the event signature string
+    ethers.id("Transfer(address,address,uint256)"), 
+
+    // &lt;span class="bold"&gt;Topic 1: Hashed 'from' address&lt;/span&gt; (if indexed)
+    // Addresses need to be zero-padded to 32 bytes (64 hex characters)
+    ethers.zeroPadValue(targetFromAddress, 32), 
+
+    // &lt;span class="bold"&gt;Topic 2: Hashed 'to' address&lt;/span&gt; (if indexed)
+    ethers.zeroPadValue(targetToAddress, 32)
+    // Use null for "any value" for an indexed topic
+  ],
+  fromBlock: 16000000,
+  toBlock: "latest"
+};
+
+const logs = await provider.getLogs(filter);
+console.log(`&lt;span class="bold"&gt;Found ${logs.length} logs matching complex filter:&lt;/span&gt;`);
+
+// &lt;span class="italic"&gt;Parse these raw logs to get readable event arguments&lt;/span&gt;
+logs.forEach((log) => {
+  const parsedLog = iface.parseLog(log);
+  if (parsedLog) { // parseLog returns null if it doesn't match the ABI
+    console.log(`  Event Name: &lt;span class="highlight-green"&gt;${parsedLog.name}&lt;/span&gt;`);
+    console.log(`  Arguments: From=${parsedLog.args.from}, To=${parsedLog.args.to}, Value=${ethers.formatEther(parsedLog.args.value)}`);
+    console.log('---');
+  }
+});</code></pre>
+
+            <h3 id="parsing-events">Parsing Events</h3>
+            <p>Raw logs returned by `provider.getLogs()` are low-level data structures. To make them human-readable, you need to parse them using a contract's `Interface`.</p>
+            <pre><code>// Assuming 'abi' is the ABI for your contract and 'provider' is your provider
+const iface = new ethers.Interface(abi); // Create an interface from your contract's ABI
+
+const filter = {
+  address: contractAddress,
+  topics: [
+    ethers.id("Transfer(address,address,uint256)")
+  ],
+  fromBlock: 15000000,
+  toBlock: 15000010
+};
+
+const rawLogs = await provider.getLogs(filter);
+console.log(`&lt;span class="bold"&gt;Parsing ${rawLogs.length} raw logs...&lt;/span&gt;`);
+
+rawLogs.forEach((log) => {
+  try {
+    const parsedLog = iface.parseLog(log); // &lt;span class="highlight-blue"&gt;This is where the magic happens!&lt;/span&gt;
+    if (parsedLog) {
+      console.log(`  Event: &lt;span class="highlight-green"&gt;${parsedLog.name}&lt;/span&gt;`);
+      console.log(`  Block Number: ${log.blockNumber}`);
+      console.log(`  Arguments:`);
+      // Access arguments by name or index
+      console.log(`    From: ${parsedLog.args.from}`);
+      console.log(`    To: ${parsedLog.args.to}`);
+      console.log(`    Value: ${ethers.formatEther(parsedLog.args.value)}`);
+      console.log('----');
+    }
+  } catch (parseError) {
+    console.error("Error parsing log:", parseError.message);
+  }
+});</code></pre>
+        </section>
+
+        <section id="utilities">
+            <h2>Utilities</h2>
+            <p>The <code>ethers.utils</code> namespace (or directly from the <code>ethers</code> object in v6) provides a wide array of helper functions for common tasks like data conversion, address validation, hashing, and ABI encoding/decoding. These utilities are invaluable for preparing data for blockchain interactions and interpreting results.</p>
+
+            <h3 id="common-utility-functions">Common Utility Functions</h3>
+            <h4>Unit Conversions (Ether, Gwei, Wei)</h4>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Convert human-readable Ether to Wei (BigInt)&lt;/span&gt;
+const oneEtherWei = ethers.parseEther("1.0");     // Result: 1000000000000000000n
+const halfEtherWei = ethers.parseEther("0.5");    // Result: 500000000000000000n
+console.log(`1 ETH in Wei: ${oneEtherWei}`);
+
+// &lt;span class="highlight-green"&gt;Convert Gwei to Wei (BigInt)&lt;/span&gt;
+const oneGweiWei = ethers.parseUnits("1", "gwei"); // Result: 1000000000n
+const twentyGweiWei = ethers.parseUnits("20", "gwei"); // Result: 20000000000n
+console.log(`20 Gwei in Wei: ${twentyGweiWei}`);
+
+// &lt;span class="highlight-purple"&gt;Convert Wei (BigInt) back to human-readable Ether&lt;/span&gt;
+const formattedEther = ethers.formatEther(oneEtherWei); // Result: "1.0"
+console.log(`Formatted 1 ETH: "${formattedEther}"`);
+
+// &lt;span class="highlight-blue"&gt;Convert Wei (BigInt) back to human-readable Gwei&lt;/span&gt;
+const formattedGwei = ethers.formatUnits(twentyGweiWei, "gwei"); // Result: "20.0"
+console.log(`Formatted 20 Gwei: "${formattedGwei}"`);</code></pre>
+
+            <h4>Address Utilities</h4>
+            <pre><code>const address = "0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D";
+const invalidAddress = "0x123";
+
+// &lt;span class="highlight-green"&gt;Check if an address is valid&lt;/span&gt;
+const isValid = ethers.isAddress(address); // true
+const isInvalid = ethers.isAddress(invalidAddress); // false
+console.log(`Is ${address} valid? ${isValid}`);
+
+// &lt;span class="highlight-purple"&gt;Convert to EIP-55 checksummed address&lt;/span&gt;
+const nonChecksummedAddress = "0x742d35cc6634c0532925a3b8d42c3f8d4c4c38d";
+const checksummed = ethers.getAddress(nonChecksummedAddress);
+console.log(`Checksummed address: ${checksummed}`); // Example: 0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D</code></pre>
+
+            <h4>Hashing Functions</h4>
+            <p>For computing cryptographic hashes like Keccak-256 and event signatures.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Compute Keccak-256 hash of a string&lt;/span&gt;
+const messageHash = ethers.id("Hello World"); // Equivalent to keccak256(toUtf8Bytes("Hello World"))
+console.log(`Keccak-256 hash of "Hello World": ${messageHash}`);
+
+// &lt;span class="highlight-green"&gt;Generic Keccak-256 hash of bytes&lt;/span&gt;
+const dataBytes = ethers.toUtf8Bytes("Hello"); // Convert string to Uint8Array
+const keccak = ethers.keccak256(dataBytes);
+console.log(`Keccak-256 hash of "Hello" bytes: ${keccak}`);</code></pre>
+
+            <h4>Encoding/Decoding (Bytes32)</h4>
+            <p>For working with fixed-size byte arrays, often used for short strings or identifiers in contracts.</p>
+            <pre><code>// &lt;span class="highlight-purple"&gt;Encode a string to a bytes32 hex string&lt;/span&gt;
+const encoded = ethers.encodeBytes32String("MyTokenSymbol");
+console.log(`"MyTokenSymbol" encoded to bytes32: ${encoded}`);
+
+// &lt;span class="highlight-blue"&gt;Decode a bytes32 hex string back to a string&lt;/span&gt;
+const decoded = ethers.decodeBytes32String(encoded);
+console.log(`Bytes32 decoded back: "${decoded}"`);</code></pre>
+
+            <h4>ABI Encoding (Low-Level)</h4>
+            <p>For manually encoding and decoding ABI-compliant data, useful for custom contract interactions or understanding calldata.</p>
+            <pre><code>const abiCoder = ethers.AbiCoder.defaultAbiCoder(); // Get the default ABI Coder instance
+
+// &lt;span class="highlight-green"&gt;Encode values according to ABI types&lt;/span&gt;
+const encodedValues = abiCoder.encode(
+  ["uint256", "string", "address"],
+  [123, "Hello World", "0xYourAddressHere"]
+);
+console.log(`Encoded values: ${encodedValues}`);
+
+// &lt;span class="highlight-purple"&gt;Decode values from an encoded string&lt;/span&gt;
+const decodedValues = abiCoder.decode(
+  ["uint256", "string", "address"],
+  encodedValues
+);
+console.log(`Decoded values:`);
+console.log(`  uint256: ${decodedValues[0].toString()}`);
+console.log(`  string: "${decodedValues[1]}"`);
+console.log(`  address: ${decodedValues[2]}`);</code></pre>
+
+            <h3 id="working-with-abis">Working with ABIs</h3>
+            <p>The <code>ethers.Interface</code> class is a powerful tool for programmatically working with contract ABIs, allowing you to encode function calls, decode results, and parse events without direct string manipulation.</p>
+            <pre><code>// &lt;span class="bold"&gt;Create an Interface instance from a contract ABI&lt;/span&gt;
+const contractAbi = [
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "function balanceOf(address account) view returns (uint256)",
+  "event Transfer(address indexed from, address indexed to, uint256 value)"
+];
+const iface = new ethers.Interface(contractAbi);
+
+// &lt;span class="highlight-blue"&gt;Encode a function call (creates calldata for a transaction)&lt;/span&gt;
+const toAddress = "0xAnotherRecipientAddress";
+const amount = ethers.parseEther("50");
+const transferCalldata = iface.encodeFunctionData("transfer", [toAddress, amount]);
+console.log(`Encoded 'transfer' function call data: ${transferCalldata}`);
+
+// &lt;span class="highlight-green"&gt;Decode a function result&lt;/span&gt; (e.g., from an 'eth_call' or transaction receipt)
+// Imagine '0x0000000000000000000000000000000000000000000000000000000000000001' is a hex encoded 'true' boolean
+const decodedTransferResult = iface.decodeFunctionResult("transfer", "0x0000000000000000000000000000000000000000000000000000000000000001");
+console.log(`Decoded 'transfer' result: ${decodedTransferResult[0]}`); // Expected: true
+
+// &lt;span class="highlight-purple"&gt;Get a function selector (first 4 bytes of the Keccak-256 hash of the function signature)&lt;/span&gt;
+const selector = iface.getFunction("transfer").selector;
+console.log(`Selector for 'transfer(address,uint256)': ${selector}`);
+
+// &lt;span class="highlight-blue"&gt;Get an event fragment (useful for event filtering)&lt;/span&gt;
+const transferEventFragment = iface.getEvent("Transfer");
+console.log(`Transfer event signature: ${transferEventFragment.format("full")}`);</code></pre>
+        </section>
+
+        <section id="advanced-topics">
+            <h2>Advanced Topics</h2>
+            <p>Beyond the core functionalities, Ether.js provides tools and patterns for more complex blockchain interactions.</p>
+
+            <h3 id="contract-factories">Contract Factories</h3>
+            <p><span class="bold"><code>ContractFactory</code></span> is used to deploy new smart contracts to the Ethereum blockchain. It requires the contract's ABI and its bytecode.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. Define contract ABI and Bytecode&lt;/span&gt; (obtained after compiling your Solidity contract)
+const contractAbi = [
+  "constructor(string _name, string _symbol, uint256 _initialSupply)",
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function totalSupply() view returns (uint256)"
+  // ... other functions
+];
+const contractBytecode = "0x608060405234801561001057..."; // &lt;span class="highlight-red"&gt;Replace with your compiled contract's bytecode&lt;/span&gt;
+
+// &lt;span class="highlight-green"&gt;2. Create a Wallet with a Provider (the deployer)&lt;/span&gt;
+const provider = new ethers.JsonRpcProvider("http://localhost:8545"); // Or any network
+const deployerPrivateKey = "0x..."; // &lt;span class="highlight-red"&gt;The private key of the account deploying the contract&lt;/span&gt;
+const deployerWallet = new ethers.Wallet(deployerPrivateKey, provider);
+
+// &lt;span class="highlight-purple"&gt;3. Create a ContractFactory instance&lt;/span&gt;
+const ContractFactory = new ethers.ContractFactory(contractAbi, contractBytecode, deployerWallet);
+
+// &lt;span class="highlight-blue"&gt;4. Deploy the contract&lt;/span&gt; (pass constructor arguments if any)
+const tokenName = "MyCoolToken";
+const tokenSymbol = "MCT";
+const initialSupply = ethers.parseEther("1000000"); // 1 Million tokens
+console.log(`Deploying ${tokenName} (${tokenSymbol}) with initial supply of ${ethers.formatEther(initialSupply)}...`);
+
+const deployedContract = await ContractFactory.deploy(tokenName, tokenSymbol, initialSupply);
+
+// &lt;span class="highlight-green"&gt;5. Wait for the deployment transaction to be mined&lt;/span&gt;
+await deployedContract.waitForDeployment();
+const contractAddress = await deployedContract.getAddress(); // Get the deployed address
+console.log("Contract deployed successfully at address:", &lt;span class="highlight-blue"&gt;contractAddress&lt;/span&gt;);
+
+// You can now interact with the deployed contract:
+const name = await deployedContract.name();
+console.log("Deployed Contract Name:", name);</code></pre>
+
+            <h3 id="multicall-pattern">Multicall Pattern</h3>
+            <p>The <span class="bold">Multicall pattern</span> allows you to batch multiple read-only contract calls into a single transaction. This significantly reduces the number of RPC calls, improving performance and reducing network overhead, especially for dApps that fetch a lot of on-chain data.</p>
+            <p class="italic">This pattern typically involves a separate 'Multicall' smart contract deployed on the network, which aggregates the calls and returns their results.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. ABI for a common Multicall contract&lt;/span&gt; (e.g., MakerDAO's Multicall)
+const multicallAbi = [
+  "function aggregate((address target, bytes callData)[] calls) view returns (uint256 blockNumber, bytes[] returnData)"
+];
+const multicallAddress = "0x...&lt;/span&gt;"; // &lt;span class="highlight-red"&gt;Known Multicall contract address for your network&lt;/span&gt;
+
+// &lt;span class="highlight-green"&gt;2. Create a Multicall contract instance&lt;/span&gt;
+const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_PROJECT_ID");
+const multicallContract = new ethers.Contract(multicallAddress, multicallAbi, provider);
+
+// &lt;span class="highlight-purple"&gt;3. Define the calls you want to aggregate&lt;/span&gt;
+// Let's say we want to get balanceOf for two different addresses on an ERC-20 token
+const tokenAddress = "0xYourTokenAddress";
+const tokenAbi = ["function balanceOf(address) view returns (uint256)"];
+const tokenIface = new ethers.Interface(tokenAbi);
+
+const address1 = "0xAddress1";
+const address2 = "0xAddress2";
+
+const calls = [
+  {
+    target: tokenAddress,
+    callData: tokenIface.encodeFunctionData("balanceOf", [address1])
+  },
+  {
+    target: tokenAddress,
+    callData: tokenIface.encodeFunctionData("balanceOf", [address2])
+  }
+];
+
+// &lt;span class="highlight-blue"&gt;4. Execute the aggregate call&lt;/span&gt;
+console.log("Aggregating calls for token balances...");
+const [blockNumber, returnData] = await multicallContract.aggregate(calls);
+
+console.log(`Results from block ${blockNumber.toString()}:`);
+
+// &lt;span class="highlight-green"&gt;5. Decode the return data&lt;/span&gt;
+const balance1 = tokenIface.decodeFunctionResult("balanceOf", returnData[0])[0];
+const balance2 = tokenIface.decodeFunctionResult("balanceOf", returnData[1])[0];
+
+console.log(`  Balance of ${address1}: ${ethers.formatEther(balance1)} tokens`);
+console.log(`  Balance of ${address2}: ${ethers.formatEther(balance2)} tokens`);</code></pre>
+
+            <h3 id="proxy-patterns">Proxy Patterns</h3>
+            <p><span class="bold">Proxy contracts</span> are a common design pattern in Solidity for upgradeability. They allow the logic of a smart contract to be updated without changing the contract's address. Ether.js can interact with these by treating the proxy contract as if it were the implementation contract, using the implementation's ABI.</p>
+            <p class="italic">Common proxy standards include ERC-1967 (Transparent Proxies) and EIP-1822 (Universal Upgradeable Proxy Standard - UUPS).</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. Proxy Contract Address&lt;/span&gt;
+const proxyAddress = "0xYourProxyContractAddress";
+// &lt;span class="highlight-green"&gt;2. Implementation Contract's ABI&lt;/span&gt; (what the proxy delegates calls to)
+const implementationAbi = [
+  "function version() view returns (uint256)",
+  "function doSomething(uint256 _value) public"
+  // ... other functions from your implementation
+];
+
+// &lt;span class="highlight-purple"&gt;3. Create a Contract instance using the proxy address and the implementation's ABI&lt;/span&gt;
+const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_PROJECT_ID");
+const proxyContract = new ethers.Contract(proxyAddress, implementationAbi, provider);
+
+console.log("Interacting with proxy as if it were the implementation...");
+const version = await proxyContract.version();
+console.log("Current contract version:", &lt;span class="highlight-blue"&gt;version.toString()&lt;/span&gt;);
+
+// If you need to find the underlying implementation address for Transparent Proxies (ERC-1967)
+// The implementation address is stored in a specific storage slot (a standard EIP-1967 value)
+const implementationSlot = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
+const rawImplementationAddress = await provider.getStorage(proxyAddress, implementationSlot);
+
+// The address is stored as a 32-byte word, so extract the last 20 bytes
+const implementationAddress = ethers.getAddress(rawImplementationAddress.slice(-40));
+console.log("Underlying Implementation Address (for Transparent Proxy):", &lt;span class="highlight-green"&gt;implementationAddress&lt;/span&gt;);</code></pre>
+
+            <h3 id="flash-loans-integration">Flash Loans Integration</h3>
+            <p><span class="bold">Flash loans</span> are a powerful DeFi primitive that allows users to borrow uncollateralized assets, provided that the liquidity is returned within the same transaction block. Ether.js facilitates interacting with protocols that offer flash loans (e.g., Aave, Uniswap V3).</p>
+            <p class="italic">This typically involves calling a flash loan function on the lending pool, which then calls back into your smart contract (the `receiverAddress`) to execute your logic, and finally repays the loan.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. ABI for the Aave Lending Pool contract (simplified for flashLoan function)&lt;/span&gt;
+const aavePoolAbi = [
+  "function flashLoan(address receiverAddress, address[] assets, uint256[] amounts, uint256[] modes, address onBehalfOf, bytes params, uint16 referralCode) external"
+];
+const aavePoolAddress = "0xYourAaveLendingPoolAddress"; // &lt;span class="highlight-red"&gt;Example Aave V3 Pool address for your network&lt;/span&gt;
+
+// &lt;span class="highlight-green"&gt;2. Prepare your receiver contract (this is your custom contract that handles the flash loan logic)&lt;/span&gt;
+const receiverContractAddress = "0xYourFlashLoanReceiverContract"; // Your contract that implements IFlashLoanSimpleReceiver.sol
+const tokenToBorrow = "0xYourTokenAddress"; // e.g., WETH, DAI
+const amountToBorrow = ethers.parseEther("1000"); // Borrow 1000 WETH/DAI
+
+// &lt;span class="highlight-purple"&gt;3. Wallet/Signer to initiate the flash loan transaction&lt;/span&gt;
+const provider = new ethers.JsonRpcProvider("http://localhost:8545");
+const wallet = new ethers.Wallet("0x...", provider);
+
+// &lt;span class="highlight-blue"&gt;4. Create Aave Pool contract instance with your signer&lt;/span&gt;
+const aavePoolContract = new ethers.Contract(aavePoolAddress, aavePoolAbi, wallet);
+
+// &lt;span class="highlight-green"&gt;5. Call the flashLoan function&lt;/span&gt;
+console.log(`Initiating flash loan for ${ethers.formatEther(amountToBorrow)} ${tokenToBorrow}...`);
+const flashLoanTx = await aavePoolContract.flashLoan(
+  receiverContractAddress, // Address of your contract that receives the flash loan callback
+  [tokenToBorrow],        // Array of assets to borrow
+  [amountToBorrow],       // Array of amounts for each asset
+  [0],                    // Modes: 0 = No debt, 1 = Stable, 2 = Variable (depends on Aave version)
+  wallet.address,         // Address on behalf of which the loan is taken (usually sender)
+  "0x",                   // Params: Arbitrary data to be passed to the receiver contract (encoded in your receiver)
+  0                       // Referral code (usually 0)
+);
+
+console.log("Flash Loan Transaction Hash:", &lt;span class="highlight-blue"&gt;flashLoanTx.hash&lt;/span&gt;);
+await flashLoanTx.wait();
+console.log("Flash loan transaction confirmed! Check your receiver contract logs.");</code></pre>
+            <p class="italic">Implementing flash loans requires careful smart contract development for the receiver contract to ensure repayment within the same transaction to avoid liquidation.</p>
+        </section>
+
+        <section id="best-practices">
+            <h2>Best Practices</h2>
+            <p>Adhering to best practices is crucial for building <span class="bold">secure, efficient, and maintainable</span> dApps with Ether.js.</p>
+
+            <h3 id="security-best-practices">Security Best Practices</h3>
+            <p>When working with blockchain interactions, especially involving funds, security is paramount.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. Always validate addresses:&lt;/span&gt;
+// Before sending funds or interacting with a contract, ensure the address is well-formed.
+function validateAndChecksumAddress(address) {
+  if (!ethers.isAddress(address)) {
+    throw new Error(`Invalid Ethereum address: ${address}`);
+  }
+  return ethers.getAddress(address); // Returns the EIP-55 checksummed address
+}
+
+try {
+  const safeAddress = validateAndChecksumAddress("0x742d35Cc6634C0532925a3b8D42C3f8d4c4c38D");
+  console.log("Validated address:", safeAddress);
+  // Proceed with transaction/interaction
+} catch (error) {
+  console.error("Address validation failed:", error.message);
+}
+
+// &lt;span class="highlight-green"&gt;2. Implement robust error handling:&lt;/span&gt;
+// Anticipate and handle common transaction errors (e.g., insufficient funds, gas limit exceeding, contract revert).
+async function safeContractCall(contractInstance, functionName, ...args) {
+  try {
+    const tx = await contractInstance[functionName](...args);
+    const receipt = await tx.wait();
+    if (receipt.status === 0) {
+      console.error(`Transaction failed for ${functionName}. Receipt:`, receipt);
+      throw new Error(`Transaction reverted on chain for ${functionName}.`);
+    }
+    console.log(`Transaction for ${functionName} successful! Hash: ${receipt.hash}`);
+    return receipt;
+  } catch (error) {
+    console.error(`Error during ${functionName} call:`, error);
+    if (error.code === 'CALL_EXCEPTION') {
+      console.error('Contract call reverted:', error.reason || 'No specific reason given.');
+    } else if (error.code === 'INSUFFICIENT_FUNDS') {
+      console.error('Wallet has insufficient funds for transaction.');
+    } else if (error.code === 'UNPREDICTABLE_GAS_LIMIT') {
+      console.error('Gas limit could not be estimated. Check contract state or arguments.');
+    }
+    throw error; // Re-throw to propagate the error
+  }
+}
+
+// &lt;span class="highlight-purple"&gt;3. Implement transaction retry logic (with exponential backoff and gas price adjustment):&lt;/span&gt;
+// For network instability or temporary gas spikes.
+async function sendTransactionWithRetry(wallet, transaction, maxRetries = 5) {
+  let currentTx = { ...transaction };
+  let currentNonce = await wallet.getNonce("latest");
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      currentTx.nonce = currentNonce; // Ensure correct nonce for retry
+      const txResponse = await wallet.sendTransaction(currentTx);
+      console.log(`Attempt ${i + 1}: Transaction sent, hash: ${txResponse.hash}`);
+      const receipt = await txResponse.wait();
+      if (receipt.status === 0) throw new Error("Transaction reverted on chain.");
+      return receipt;
+    } catch (error) {
+      console.warn(`Attempt ${i + 1} failed: ${error.message}`);
+      if (i === maxRetries - 1) {
+        throw new Error(`All retry attempts failed: ${error.message}`);
+      }
+      if (error.code === 'NONCE_LOCKED' || error.code === 'REPLACEMENT_UNDERPRICED') {
+          // Increment nonce if it's a nonce error
+          currentNonce++;
+          // Increase gas for next attempt
+          currentTx.maxPriorityFeePerGas = currentTx.maxPriorityFeePerGas ? currentTx.maxPriorityFeePerGas * BigInt(120) / BigInt(100) : undefined;
+          currentTx.maxFeePerGas = currentTx.maxFeePerGas ? currentTx.maxFeePerGas * BigInt(120) / BigInt(100) : undefined;
+          currentTx.gasPrice = currentTx.gasPrice ? currentTx.gasPrice * BigInt(120) / BigInt(100) : undefined;
+          console.log(`Incrementing nonce to ${currentNonce} and increasing gas for retry.`);
+      } else if (error.code === 'INSUFFICIENT_FUNDS') {
+          throw error; // No point retrying if funds are missing
+      }
+      await new Promise(res => setTimeout(res, 2000 * (i + 1))); // Exponential backoff
+    }
+  }
+}</code></pre>
+
+            <h3 id="gas-optimization">Gas Optimization Strategies</h3>
+            <p>Minimizing gas costs is vital for dApp user experience and profitability.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. Batch operations when possible:&lt;/span&gt;
+// For multiple read operations, use the Multicall pattern. For multiple write operations (if supported by your contract), use a batching function.
+async function batchTransfer(tokenContract, recipients, amounts, signer) {
+  const calls = recipients.map((recipient, i) => 
+    tokenContract.interface.encodeFunctionData("transfer", [recipient, amounts[i]])
+  );
+  // &lt;span class="italic"&gt;This assumes your contract has a batching function, e.g., 'batchTransfer'&lt;/span&gt;
+  // Or you could use a general purpose batching contract like a Multicall.
+  console.log(`Batching ${calls.length} transfers...`);
+  const tx = await tokenContract.connect(signer).batchTransfer(calls);
+  return await tx.wait();
+}
+
+// &lt;span class="highlight-green"&gt;2. Use appropriate gas limits:&lt;/span&gt;
+// Always estimate gas for state-changing transactions and add a reasonable buffer.
+async function sendWithEstimatedGas(wallet, transaction) {
+  try {
+    const gasEstimate = await wallet.estimateGas(transaction);
+    const gasLimit = gasEstimate * BigInt(120) / BigInt(100); // Add a 20% buffer
+    console.log(`Estimated gas: ${gasEstimate.toString()}, Using gas limit: ${gasLimit.toString()}`);
+    
+    const txResponse = await wallet.sendTransaction({
+      ...transaction,
+      gasLimit: gasLimit
+    });
+    return await txResponse.wait();
+  } catch (error) {
+    console.error("Error estimating or sending with estimated gas:", error.message);
+    throw error;
+  }
+}
+
+// &lt;span class="highlight-purple"&gt;3. Monitor and adapt to gas prices (EIP-1559):&lt;/span&gt;
+// Dynamically fetch and set gas fees based on network conditions.
+async function getOptimalFeeData(provider) {
+  const feeData = await provider.getFeeData();
+  
+  if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+    // EIP-1559 is supported, use maxFeePerGas and maxPriorityFeePerGas
+    console.log(`Using EIP-1559 fees. Base Fee: ${ethers.formatUnits(feeData.gasPrice, "gwei")} Gwei`);
+    return {
+      maxFeePerGas: feeData.maxFeePerGas,
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas
+    };
+  } else if (feeData.gasPrice) {
+    // Fallback to legacy gasPrice
+    console.log(`Using Legacy fees. Gas Price: ${ethers.formatUnits(feeData.gasPrice, "gwei")} Gwei`);
+    return { gasPrice: feeData.gasPrice };
+  } else {
+    throw new Error("Could not retrieve gas fee data from provider.");
+  }
+}
+
+// Example usage:
+// const currentFees = await getOptimalFeeData(provider);
+// const tx = await wallet.sendTransaction({ to: ..., value: ..., ...currentFees });</code></pre>
+
+            <h3 id="code-organization">Code Organization</h3>
+            <p>Well-structured code is easier to maintain, test, and scale.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;1. Create reusable contract instances/classes:&lt;/span&gt;
+// Encapsulate contract interactions within classes for modularity.
+class ERC20TokenService {
+  constructor(address, providerOrSigner) {
+    this.contract = new ethers.Contract(address, ERC20_ABI, providerOrSigner);
+  }
+  
+  async getName() {
+    return await this.contract.name();
+  }
+  
+  async getBalance(accountAddress) {
+    const balanceWei = await this.contract.balanceOf(accountAddress);
+    return ethers.formatEther(balanceWei); // Return readable format
+  }
+  
+  async transfer(toAddress, amountEth, signer) {
+    // Connect to a signer if the instance was created with a provider
+    const contractWithSigner = signer ? this.contract.connect(signer) : this.contract;
+    if (!contractWithSigner.runner.provider.getSigner) {
+        throw new Error("Cannot transfer without a signer.");
+    }
+    const amountWei = ethers.parseEther(amountEth.toString());
+    console.log(`Transferring ${amountEth} tokens to ${toAddress}...`);
+    const tx = await contractWithSigner.transfer(toAddress, amountWei);
+    return await tx.wait(); // Return receipt
+  }
+}
+
+// &lt;span class="highlight-green"&gt;2. Centralize environment configuration:&lt;/span&gt;
+// Use environment variables or a config file for RPC URLs, contract addresses, API keys.
+const appConfig = {
+  networks: {
+    mainnet: {
+      rpcUrl: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR_INFURA_ID",
+      chainId: 1,
+      tokenAddress: "0xYourMainnetToken"
+    },
+    sepolia: {
+      rpcUrl: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_ID",
+      chainId: 11155111,
+      tokenAddress: "0xYourSepoliaToken"
+    }
+  },
+  apiKeys: {
+    infura: process.env.INFURA_API_KEY,
+    alchemy: process.env.ALCHEMY_API_KEY
+  }
+};
+
+// &lt;span class="highlight-purple"&gt;3. Use connection pooling for multiple RPC requests (advanced):&lt;/span&gt;
+// Especially useful for high-throughput applications to distribute load or handle rate limits.
+class ProviderPool {
+  constructor(rpcUrls) {
+    this.providers = rpcUrls.map(url => new ethers.JsonRpcProvider(url));
+    this.currentIndex = 0;
+  }
+  
+  getProvider() {
+    const provider = this.providers[this.currentIndex];
+    this.currentIndex = (this.currentIndex + 1) % this.providers.length;
+    return provider;
+  }
+
+  // &lt;span class="italic"&gt;Add a method to get a healthy provider with retry logic&lt;/span&gt;
+  async getHealthyProvider() {
+    for (let i = 0; i < this.providers.length; i++) {
+      const provider = this.getProvider(); // Cycle through providers
+      try {
+        await provider.getBlockNumber(); // Test connection
+        return provider;
+      } catch (error) {
+        console.warn(`Provider ${provider.url} failed, trying next...`);
+      }
+    }
+    throw new Error('All providers in pool failed to connect.');
+  }
+}
+
+// const rpcEndpoints = ["rpc1.example.com", "rpc2.example.com"];
+// const providerPool = new ProviderPool(rpcEndpoints);
+// const currentProvider = await providerPool.getHealthyProvider();</code></pre>
+        </section>
+
+        <section id="real-world-examples">
+            <h2>Real-World Examples</h2>
+            <p>These examples demonstrate how Ether.js can be applied to build common blockchain applications and services.</p>
+
+            <h3 id="dex-trading-bot">1. DEX Trading Bot</h3>
+            <p>A simple class for interacting with a Decentralized Exchange (DEX) like Uniswap to perform swaps and monitor price changes.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Dummy ABIs and Addresses (Replace with actual ones)&lt;/span&gt;
+const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"; // Uniswap V2 Router on Mainnet
+const UNISWAP_ROUTER_ABI = [
+  "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) payable returns (uint[] memory amounts)",
+  "function getAmountsOut(uint amountIn, address[] calldata path) view returns (uint[] memory amounts)",
+  "event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)"
+];
+const WETH_ADDRESS = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"; // WETH on Mainnet
+
+class DEXTrader {
+  constructor(privateKey, rpcUrl) {
+    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    this.wallet = new ethers.Wallet(privateKey, this.provider);
+    this.uniswapRouter = new ethers.Contract(
+      UNISWAP_ROUTER_ADDRESS,
+      UNISWAP_ROUTER_ABI,
+      this.wallet // Connected with a signer for transactions
+    );
+    console.log(`DEX Trader initialized for wallet: ${this.wallet.address}`);
+  }
+  
+  async swapExactETHForTokens(tokenAddress, amountETHIn, slippage = 0.005) { // slippage as percentage (e.g., 0.005 for 0.5%)
+    const path = [WETH_ADDRESS, tokenAddress];
+    const deadline = Math.floor(Date.now() / 1000) + (60 * 20); // 20 minutes from now
+
+    const amountInWei = ethers.parseEther(amountETHIn.toString());
+
+    // &lt;span class="highlight-green"&gt;Get estimated amount of tokens out&lt;/span&gt;
+    const amounts = await this.uniswapRouter.getAmountsOut(amountInWei, path);
+    const amountOutMin = amounts[1] * BigInt(Math.round(10000 - slippage * 10000)) / BigInt(10000); // Apply slippage
+    
+    console.log(`Attempting to swap ${amountETHIn} ETH for at least ${ethers.formatUnits(amountOutMin, 18)} of target token...`);
+    
+    const tx = await this.uniswapRouter.swapExactETHForTokens(
+      amountOutMin,
+      path,
+      this.wallet.address,
+      deadline,
+      { value: amountInWei, gasLimit: 300000 } // Send ETH with the transaction
+    );
+    
+    console.log("Swap transaction sent:", &lt;span class="highlight-blue"&gt;tx.hash&lt;/span&gt;);
+    return await tx.wait();
+  }
+  
+  async monitorPrice(pairAddress) { // &lt;span class="italic"&gt;This simplified example listens to any 'Swap' on the Router, not a specific pair.&lt;/span&gt;
+                                    // For precise price monitoring, you'd listen on a specific Uniswap Pair contract.
+    const filter = this.uniswapRouter.filters.Swap();
+    console.log("Monitoring Uniswap Router for Swap events...");
+    
+    this.uniswapRouter.on(filter, (sender, amount0In, amount1In, amount0Out, amount1Out, to, event) => {
+      console.log('--- Price Change Event ---');
+      console.log(`  Sender: ${sender}, To: ${to}`);
+      console.log(`  Amounts In: ${ethers.formatEther(amount0In)} / ${ethers.formatEther(amount1In)}`);
+      console.log(`  Amounts Out: ${ethers.formatEther(amount0Out)} / ${ethers.formatEther(amount1Out)}`);
+      console.log(`  Block: ${event.log.blockNumber}, Tx: ${event.log.transactionHash.substring(0, 10)}...`);
+    });
+  }
+}
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const trader = new DEXTrader("YOUR_PRIVATE_KEY", "YOUR_RPC_URL");
+// trader.swapExactETHForTokens("0xDAI_TOKEN_ADDRESS", 0.1).then(receipt => console.log("Swap confirmed:", receipt));
+// trader.monitorPrice("0xUniswapPairAddress"); // For real use, specify pair address
+</code></pre>
+
+            <h3 id="nft-marketplace">2. NFT Marketplace</h3>
+            <p>Interacting with a simplified NFT marketplace contract to list and buy NFTs.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Dummy ABIs and Addresses&lt;/span&gt;
+const NFT_MARKETPLACE_ABI = [
+  "function listItem(address nftAddress, uint256 tokenId, uint256 price) public",
+  "function buyItem(address nftAddress, uint256 tokenId) public payable",
+  "event ItemListed(address indexed seller, address indexed nftAddress, uint256 indexed tokenId, uint256 price)",
+  "event ItemBought(address indexed buyer, address indexed nftAddress, uint256 indexed tokenId, uint256 price)"
+];
+
+class NFTMarketplace {
+  constructor(contractAddress, signer) {
+    this.contract = new ethers.Contract(contractAddress, NFT_MARKETPLACE_ABI, signer);
+    console.log(`NFT Marketplace initialized for contract: ${contractAddress}`);
+  }
+  
+  async listNFT(nftAddress, tokenId, priceEth) {
+    const priceWei = ethers.parseEther(priceEth.toString());
+    console.log(`Listing NFT ${tokenId} from ${nftAddress} for ${priceEth} ETH...`);
+    const tx = await this.contract.listItem(nftAddress, tokenId, priceWei);
+    console.log("List transaction sent:", &lt;span class="highlight-blue"&gt;tx.hash&lt;/span&gt;);
+    return await tx.wait();
+  }
+  
+  async buyNFT(nftAddress, tokenId, priceEth) {
+    const priceWei = ethers.parseEther(priceEth.toString());
+    console.log(`Buying NFT ${tokenId} from ${nftAddress} for ${priceEth} ETH...`);
+    const tx = await this.contract.buyItem(nftAddress, tokenId, { value: priceWei });
+    console.log("Buy transaction sent:", &lt;span class="highlight-green"&gt;tx.hash&lt;/span&gt;);
+    return await tx.wait();
+  }
+  
+  async getActiveListings() {
+    // &lt;span class="highlight-purple"&gt;Query recent 'ItemListed' events&lt;/span&gt; (adjust block range as needed)
+    const filter = this.contract.filters.ItemListed();
+    const events = await this.contract.queryFilter(filter, -5000); // Last 5000 blocks
+    
+    console.log(`Found ${events.length} active listings (from recent events):`);
+    return events.map(event => ({
+      seller: event.args.seller,
+      nftAddress: event.args.nftAddress,
+      tokenId: event.args.tokenId.toString(),
+      price: ethers.formatEther(event.args.price)
+    }));
+  }
+}
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const marketplaceContractAddress = "0xYourMarketplaceContract";
+// const signer = new ethers.Wallet("YOUR_PRIVATE_KEY", new ethers.JsonRpcProvider("YOUR_RPC_URL"));
+// const marketplace = new NFTMarketplace(marketplaceContractAddress, signer);
+// marketplace.listNFT("0xMyNFTCollection", 123, 0.5).then(receipt => console.log("NFT Listed:", receipt));
+// marketplace.getActiveListings().then(listings => console.log(listings));
+</code></pre>
+
+            <h3 id="yield-farming-monitor">3. Yield Farming Monitor</h3>
+            <p>A class to monitor a yield farming contract, check user rewards, and calculate APY.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Dummy ABI for a Yield Farm contract&lt;/span&gt;
+const FARM_ABI = [
+  "function totalStaked() view returns (uint256)",
+  "function rewardRate() view returns (uint256)",
+  "function pendingRewards(address user) view returns (uint256)",
+  "function compound() public"
+];
+
+class YieldFarmMonitor {
+  constructor(farmAddress, providerOrSigner) {
+    this.farm = new ethers.Contract(farmAddress, FARM_ABI, providerOrSigner);
+    this.provider = providerOrSigner.provider || providerOrSigner; // Ensure we have a provider
+    console.log(`Yield Farm Monitor initialized for contract: ${farmAddress}`);
+  }
+  
+  async getUserRewards(userAddress) {
+    console.log(`Checking pending rewards for ${userAddress}...`);
+    const rewards = await this.farm.pendingRewards(userAddress);
+    return ethers.formatEther(rewards);
+  }
+  
+  async getAPY() {
+    console.log("Calculating current APY...");
+    const totalStaked = await this.farm.totalStaked();
+    const rewardRate = await this.farm.rewardRate(); // Rewards per second (e.g., in token wei)
+    
+    if (totalStaked === BigInt(0)) return "0"; // Avoid division by zero
+
+    const secondsPerYear = BigInt(365 * 24 * 60 * 60);
+    const yearlyRewards = rewardRate * secondsPerYear;
+    
+    // APY = (Yearly Rewards / Total Staked) * 100
+    // Perform calculation using BigInt and then format
+    const apy = (yearlyRewards * BigInt(10000)) / totalStaked; // Multiply by 10000 for 2 decimal places
+    return (apy / BigInt(100)).toString() + "." + (apy % BigInt(100)).toString().padStart(2, '0') + "%";
+  }
+  
+  async autoCompound(signer) {
+    const farmWithSigner = this.farm.connect(signer);
+    const userAddress = await signer.getAddress();
+    const rewards = await this.getUserRewards(userAddress);
+    
+    if (parseFloat(rewards) > 0.01) { // Only compound if rewards are significant
+      console.log(`Compounding ${rewards} tokens for ${userAddress}...`);
+      const tx = await farmWithSigner.compound();
+      console.log("Compound transaction sent:", &lt;span class="highlight-green"&gt;tx.hash&lt;/span&gt;);
+      return await tx.wait();
+    } else {
+      console.log("Rewards too low to compound.");
+    }
+    return null;
+  }
+}
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const farmContractAddress = "0xYourFarmContractAddress";
+// const provider = new ethers.JsonRpcProvider("YOUR_RPC_URL");
+// const farmMonitor = new YieldFarmMonitor(farmContractAddress, provider);
+// farmMonitor.getAPY().then(apy => console.log("Current Farm APY:", apy));
+// const signer = new ethers.Wallet("YOUR_PRIVATE_KEY", provider);
+// farmMonitor.autoCompound(signer).then(receipt => { if (receipt) console.log("Compounded:", receipt); });
+</code></pre>
+
+            <h3 id="multi-signature-wallet">4. Multi-Signature Wallet</h3>
+            <p>A class to interact with a multi-signature wallet contract, allowing proposal, confirmation, and execution of transactions.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Dummy ABI for a Multi-Sig Wallet contract&lt;/span&gt;
+const MULTISIG_ABI = [
+  "function submitTransaction(address destination, uint256 value, bytes data) public returns (uint256 transactionId)",
+  "function confirmTransaction(uint256 transactionId) public",
+  "function executeTransaction(uint256 transactionId) public",
+  "function isConfirmed(uint256 transactionId, address owner) view returns (bool)",
+  "function getConfirmationCount(uint256 transactionId) view returns (uint256)",
+  "function isExecuted(uint256 transactionId) view returns (bool)",
+  "event Submission(uint256 indexed transactionId)",
+  "event Confirmation(address indexed owner, uint256 indexed transactionId)",
+  "event Execution(uint256 indexed transactionId)"
+];
+
+class MultiSigWallet {
+  constructor(contractAddress, providerOrSigner) {
+    this.contract = new ethers.Contract(contractAddress, MULTISIG_ABI, providerOrSigner);
+    this.provider = providerOrSigner.provider || providerOrSigner;
+    console.log(`Multi-Sig Wallet initialized for contract: ${contractAddress}`);
+  }
+  
+  async proposeTransaction(to, valueEth, data, signer) {
+    const valueWei = ethers.parseEther(valueEth.toString());
+    const contractWithSigner = this.contract.connect(signer);
+    console.log(`Proposing transaction to ${to} with ${valueEth} ETH and data ${data}...`);
+    const tx = await contractWithSigner.submitTransaction(to, valueWei, data);
+    const receipt = await tx.wait();
+    const submissionEvent = receipt.logs.find(log => log.fragment && log.fragment.name === "Submission");
+    const transactionId = submissionEvent ? submissionEvent.args.transactionId.toString() : "N/A";
+    console.log("Transaction Proposed! ID:", &lt;span class="highlight-green"&gt;transactionId&lt;/span&gt;, "Hash:", &lt;span class="highlight-blue"&gt;receipt.hash&lt;/span&gt;);
+    return transactionId;
+  }
+  
+  async confirmTransaction(transactionId, signer) {
+    const contractWithSigner = this.contract.connect(signer);
+    console.log(`Confirming transaction ID ${transactionId}...`);
+    const tx = await contractWithSigner.confirmTransaction(transactionId);
+    const receipt = await tx.wait();
+    console.log("Transaction Confirmed! Hash:", &lt;span class="highlight-blue"&gt;receipt.hash&lt;/span&gt;);
+    return receipt;
+  }
+  
+  async executeTransaction(transactionId, signer) {
+    const contractWithSigner = this.contract.connect(signer);
+    console.log(`Executing transaction ID ${transactionId}...`);
+    const tx = await contractWithSigner.executeTransaction(transactionId);
+    const receipt = await tx.wait();
+    console.log("Transaction Executed! Hash:", &lt;span class="highlight-green"&gt;receipt.hash&lt;/span&gt;);
+    return receipt;
+  }
+  
+  async getPendingTransactions() {
+    // &lt;span class="highlight-purple"&gt;Query 'Submission' events and check their execution/confirmation status&lt;/span&gt;
+    const filter = this.contract.filters.Submission();
+    const events = await this.contract.queryFilter(filter, -1000); // Check last 1000 blocks
+    
+    const transactions = [];
+    for (const event of events) {
+      const txId = event.args.transactionId;
+      const isExecuted = await this.contract.isExecuted(txId);
+      
+      if (!isExecuted) { // Only show unexecuted transactions
+        const confirmations = await this.contract.getConfirmationCount(txId);
+        transactions.push({
+          id: txId.toString(),
+          to: event.args.destination,
+          value: ethers.formatEther(event.args.value),
+          data: event.args.data,
+          confirmations: confirmations.toString(),
+          isConfirmedByMe: await this.contract.isConfirmed(txId, await this.contract.runner.getAddress()) // Assuming signer is set
+        });
+      }
+    }
+    console.log(`Found ${transactions.length} pending multi-sig transactions.`);
+    return transactions;
+  }
+}
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const multiSigAddress = "0xYourMultiSigContract";
+// const owner1Signer = new ethers.Wallet("OWNER_1_PRIVATE_KEY", new ethers.JsonRpcProvider("RPC_URL"));
+// const multiSig = new MultiSigWallet(multiSigAddress, owner1Signer); // Pass a signer for calls requiring signer
+// multiSig.proposeTransaction("0xReceiver", 0.1, "0x").then(txId => console.log("Proposed tx ID:", txId));
+// multiSig.getPendingTransactions().then(txs => console.log(txs));
+</code></pre>
+        </section>
+
+        <section id="common-patterns-snippets">
+            <h2>Common Patterns & Snippets</h2>
+            <p>These snippets illustrate common design patterns and useful helper functions for developing with Ether.js.</p>
+
+            <h3 id="connection-management">Connection Management</h3>
+            <p>Managing robust and resilient connections to RPC endpoints is crucial for dApp reliability.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Robust provider connection with fallbacks:&lt;/span&gt;
+// Cycles through a list of RPC URLs, trying each until a healthy connection is found.
+class ConnectionManager {
+  constructor(rpcUrls) {
+    this.urls = rpcUrls;
+    this.providers = rpcUrls.map(url => new ethers.JsonRpcProvider(url));
+    this.currentIndex = 0;
+  }
+  
+  async getProvider() {
+    for (let i = 0; i < this.providers.length; i++) {
+      const provider = this.providers[this.currentIndex];
+      try {
+        await provider.getBlockNumber(); // &lt;span class="highlight-green"&gt;Test connection by fetching a block number&lt;/span&gt;
+        console.log(`Successfully connected to RPC: ${this.urls[this.currentIndex]}`);
+        return provider;
+      } catch (error) {
+        console.warn(`Provider ${this.urls[this.currentIndex]} failed: ${error.message}. Trying next...`);
+        this.currentIndex = (this.currentIndex + 1) % this.providers.length;
+      }
+    }
+    throw new Error('All configured RPC providers failed to connect. Please check network.');
+  }
+
+  getCurrentProviderUrl() {
+      return this.urls[this.currentIndex];
+  }
+}
+
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const rpcEndpoints = [
+//   "https://mainnet.infura.io/v3/YOUR_INFURA_ID",
+//   "https://eth-mainnet.alchemyapi.io/v2/YOUR_ALCHEMY_KEY",
+//   "https://rpc.ankr.com/eth"
+// ];
+// const connManager = new ConnectionManager(rpcEndpoints);
+// (async () => {
+//   try {
+//     const healthyProvider = await connManager.getProvider();
+//     console.log("Using provider:", connManager.getCurrentProviderUrl());
+//     // Now use healthyProvider for all your Ether.js operations
+//   } catch (error) {
+//     console.error("Failed to get a healthy provider:", error.message);
+//   }
+// })();</code></pre>
+
+            <h3 id="event-monitoring">Event Monitoring</h3>
+            <p>A reusable class for comprehensive and robust event monitoring, including error handling for callbacks and proper listener management.</p>
+            <pre><code>class EventMonitor {
+  constructor(contractInstance) {
+    this.contract = contractInstance;
+    this.listeners = new Map(); // Stores eventName -> listenerFunction mapping
+    console.log(`EventMonitor initialized for contract at ${this.contract.target}`);
+  }
+  
+  // &lt;span class="highlight-blue"&gt;Start monitoring a specific event&lt;/span&gt;
+  startMonitoring(eventName, callback) {
+    if (this.listeners.has(eventName)) {
+      console.warn(`Already monitoring event: ${eventName}. Skipping.`);
+      return;
+    }
+
+    // Wrap the user's callback with error handling
+    const listenerWrapper = (...args) => {
+      try {
+        callback(...args);
+      } catch (error) {
+        console.error(`Error in callback for event '${eventName}':`, error);
+      }
+    };
+    
+    this.contract.on(eventName, listenerWrapper);
+    this.listeners.set(eventName, listenerWrapper);
+    console.log(`Started monitoring for event: '${eventName}'`);
+  }
+  
+  // &lt;span class="highlight-green"&gt;Stop monitoring a specific event&lt;/span&gt;
+  stopMonitoring(eventName) {
+    const listener = this.listeners.get(eventName);
+    if (listener) {
+      this.contract.off(eventName, listener);
+      this.listeners.delete(eventName);
+      console.log(`Stopped monitoring for event: '${eventName}'`);
+    } else {
+      console.warn(`No active listener found for event: ${eventName}.`);
+    }
+  }
+  
+  // &lt;span class="highlight-purple"&gt;Stop monitoring all events for this contract instance&lt;/span&gt;
+  stopAllMonitoring() {
+    for (const [eventName, listener] of this.listeners) {
+      this.contract.off(eventName, listener);
+    }
+    this.listeners.clear();
+    console.log("Stopped monitoring all events for this contract.");
+  }
+}
+
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const tokenContract = new ethers.Contract("0xTokenAddress", ERC20_ABI, provider);
+// const tokenEventMonitor = new EventMonitor(tokenContract);
+// tokenEventMonitor.startMonitoring("Transfer", (from, to, amount, event) => {
+//   console.log(`Transfer: ${from} -> ${to}, Amount: ${ethers.formatEther(amount)}`);
+//   // Example: if (ethers.formatEther(amount) > 100) tokenEventMonitor.stopMonitoring("Transfer");
+// });
+// // Later, to stop: tokenEventMonitor.stopAllMonitoring();</code></pre>
+
+            <h3 id="transaction-queue">Transaction Queue</h3>
+            <p>Manages outgoing transactions from a single wallet, ensuring correct nonce management and sequential processing, preventing "nonce too low" errors and dropped transactions due to concurrency issues.</p>
+            <pre><code>class TransactionQueue {
+  constructor(wallet) {
+    this.wallet = wallet;
+    this.queue = [];
+    this.processing = false;
+    this.nextNonce = null; // Will fetch initial nonce when processing starts
+    console.log(`TransactionQueue initialized for wallet: ${this.wallet.address}`);
+  }
+  
+  // &lt;span class="highlight-blue"&gt;Add a transaction to the queue&lt;/span&gt;
+  // Returns a Promise that resolves with the transaction receipt once processed.
+  async addTransaction(transaction) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({
+        transaction,
+        resolve,
+        reject
+      });
+      console.log(`Transaction added to queue. Queue size: ${this.queue.length}`);
+      this.processQueue(); // Attempt to process the queue
+    });
+  }
+  
+  // &lt;span class="highlight-green"&gt;Internal function to process the queue sequentially&lt;/span&gt;
+  async processQueue() {
+    if (this.processing || this.queue.length === 0) {
+        return; // Already processing or nothing in queue
+    }
+    
+    this.processing = true;
+    if (this.nextNonce === null) {
+      this.nextNonce = await this.wallet.getNonce("latest"); // Get initial nonce
+      console.log(`Initial nonce fetched: ${this.nextNonce}`);
+    }
+    
+    while (this.queue.length > 0) {
+      const { transaction, resolve, reject } = this.queue[0]; // Peek at the first item
+      
+      try {
+        console.log(`Sending transaction with nonce ${this.nextNonce}...`);
+        const txResponse = await this.wallet.sendTransaction({
+          ...transaction,
+          nonce: this.nextNonce++ // Assign current nonce and increment for next transaction
+        });
+        console.log("Transaction broadcasted, hash:", &lt;span class="highlight-blue"&gt;txResponse.hash&lt;/span&gt;);
+        
+        const receipt = await txResponse.wait();
+        if (receipt.status === 0) {
+            throw new Error("Transaction reverted on chain.");
+        }
+        console.log("Transaction confirmed in block:", &lt;span class="highlight-green"&gt;receipt.blockNumber&lt;/span&gt;);
+        this.queue.shift(); // Remove from queue only after successful processing
+        resolve(receipt);
+      } catch (error) {
+        console.error(`Failed to send transaction (nonce ${this.nextNonce - 1}):`, error.message);
+        this.queue.shift(); // Remove failed transaction from queue
+        reject(error); // Reject the promise for this transaction
+        
+        // If the error is not due to nonce, consider resetting nextNonce or stopping
+        if (error.code === 'NONCE_LOCKED' || error.code === 'REPLACEMENT_UNDERPRICED') {
+            console.warn("Nonce conflict or underpriced. Will try to re-fetch nonce for next transaction.");
+            this.nextNonce = await this.wallet.getNonce("latest"); // Re-fetch correct nonce
+        } else {
+            // For other critical errors, you might want to stop processing or add a delay
+            console.error("Non-nonce related error. Stopping queue processing.");
+            break; // Stop processing further transactions in case of a critical error
+        }
+      }
+    }
+    
+    this.processing = false;
+    console.log("Transaction queue processing finished.");
+  }
+}
+
+// &lt;span class="italic"&gt;Usage Example:&lt;/span&gt;
+// const wallet = new ethers.Wallet("YOUR_PRIVATE_KEY", new ethers.JsonRpcProvider("RPC_URL"));
+// const txQueue = new TransactionQueue(wallet);
+// (async () => {
+//   try {
+//     const receipt1 = await txQueue.addTransaction({ to: "0x...", value: ethers.parseEther("0.01") });
+//     console.log("Tx1 done:", receipt1.hash);
+//     const receipt2 = await txQueue.addTransaction({ to: "0x...", value: ethers.parseEther("0.02") });
+//     console.log("Tx2 done:", receipt2.hash);
+//   } catch (error) {
+//     console.error("Transaction failed from queue:", error.message);
+//   }
+// })();</code></pre>
+        </section>
+
+        <section id="testing-with-etherjs">
+            <h2>Testing with Ether.js</h2>
+            <p>Testing is a <span class="bold">critical part</span> of dApp development to ensure your smart contracts and off-chain logic behave as expected. Ether.js is commonly used in conjunction with testing frameworks like Mocha, Chai, and Hardhat for unit and integration testing.</p>
+
+            <h3 id="unit-testing-example">Unit Testing Example (with Hardhat, Mocha, Chai)</h3>
+            <p>This example demonstrates a basic unit test for a simple ERC-20 like token contract using Hardhat (which integrates Ether.js) and Mocha/Chai for assertions.</p>
+            <p class="italic">This code would typically reside in a file like <code>test/MyToken.js</code> in a Hardhat project.</p>
+            <pre><code>// &lt;span class="highlight-blue"&gt;Imports from Hardhat and Chai&lt;/span&gt;
+const { expect } = require('chai');
+const { ethers } = require('hardhat'); // Hardhat automatically injects ethers
+
+describe('MyToken Contract', function() {
+  let Token;           // ContractFactory for MyToken
+  let token;           // Deployed MyToken instance
+  let owner;           // Signer for the contract deployer (owner)
+  let addr1;           // Signer for a second address
+  let addr2;           // Signer for a third address
+  let initialSupply;
+
+  // &lt;span class="highlight-green"&gt;`beforeEach` hook runs before each test case&lt;/span&gt;
+  beforeEach(async function() {
+    // &lt;span class="italic"&gt;Get signers (accounts) provided by Hardhat Network&lt;/span&gt;
+    [owner, addr1, addr2] = await ethers.getSigners();
+    
+    // &lt;span class="italic"&gt;Get the ContractFactory for your Solidity contract 'MyToken'&lt;/span&gt;
+    Token = await ethers.getContractFactory('MyToken');
+    
+    initialSupply = ethers.parseEther('1000000'); // 1 Million tokens
+    // &lt;span class="italic"&gt;Deploy the contract&lt;/span&gt; (constructor arguments: name, symbol, initialSupply)
+    token = await Token.deploy('Test Token', 'TST', initialSupply);
+    await token.waitForDeployment(); // Wait for the deployment transaction to be mined
+    
+    console.log(`MyToken deployed at: ${await token.getAddress()}`);
+    console.log(`Owner: ${owner.address}`);
+  });
+  
+  // &lt;span class="highlight-purple"&gt;Test case: Deployment should assign total supply to owner&lt;/span&gt;
+  it('Should assign the total supply of tokens to the owner', async function() {
+    const ownerBalance = await token.balanceOf(owner.address);
+    expect(ownerBalance).to.equal(initialSupply);
+  });
+
+  // &lt;span class="highlight-blue"&gt;Test case: Token transfers should work correctly&lt;/span&gt;
+  it('Should transfer tokens correctly between accounts', async function() {
+    const amountToTransfer = ethers.parseEther('100'); // Transfer 100 tokens
+
+    // Transfer from owner to addr1
+    await token.transfer(addr1.address, amountToTransfer);
+    const addr1Balance = await token.balanceOf(addr1.address);
+    expect(addr1Balance).to.equal(amountToTransfer);
+
+    // Transfer from addr1 to addr2
+    // &lt;span class="italic"&gt;Use .connect(signer) to send transaction from a different account&lt;/span&gt;
+    await token.connect(addr1).transfer(addr2.address, amountToTransfer);
+    const addr2Balance = await token.balanceOf(addr2.address);
+    expect(addr2Balance).to.equal(amountToTransfer);
+  });
+  
+  // &lt;span class="highlight-green"&gt;Test case: Transfer should emit a Transfer event&lt;/span&gt;
+  it('Should emit Transfer event on successful transfer', async function() {
+    const amountToTransfer = ethers.parseEther('50');
+
+    // &lt;span class="italic"&gt;Use Chai's 'emit' matcher&lt;/span&gt;
+    await expect(token.transfer(addr1.address, amountToTransfer))
+      .to.emit(token, 'Transfer')
+      .withArgs(owner.address, addr1.address, amountToTransfer);
+  });
+
+  // &lt;span class="highlight-purple"&gt;Test case: Revert on insufficient balance&lt;/span&gt;
+  it('Should revert if sender has insufficient balance', async function() {
+    const amountToTransfer = ethers.parseEther('2000000'); // More than initial supply
+
+    await expect(token.transfer(addr1.address, amountToTransfer))
+      .to.be.revertedWith('ERC20: transfer amount exceeds balance'); // Or your specific revert message
+  });
+});</code></pre>
+            <p>This comprehensive guide covers everything from basic setup to advanced patterns in Ether.js. Each section includes practical examples you can use in real projects. Remember to always test your code thoroughly and follow security best practices when working with real funds.</p>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('#sidebar ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
